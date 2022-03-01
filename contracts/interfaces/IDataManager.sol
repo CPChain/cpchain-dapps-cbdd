@@ -37,7 +37,7 @@ interface IDataManager {
      * @param data params
      */
     event CreateDataChartEvent(uint, string, uint, string, string, string);
-    
+
     /**
      * Triggered when user update a data chart
      * @param id chart ID
@@ -114,7 +114,6 @@ interface IDataManager {
      */
     function updateURLOfDataSource(uint, string) returns (uint);
 
-
     /**
      * Delete data source
      * @param ID
@@ -167,5 +166,4 @@ interface IDataManager {
      * Emits {UpdateDataChartEvent} 
      */
     function updateDataOfDataChart(uint, string) returns (uint);
-
 }
