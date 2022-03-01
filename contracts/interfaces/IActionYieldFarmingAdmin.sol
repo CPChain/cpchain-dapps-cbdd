@@ -7,7 +7,7 @@ interface IActionYieldFarmingAdmin {
      * @param uint action ID
      * @param uint256 reward per actions
      */
-    event SetActionRewardEvent(address, uint, uint256);
+    event SetActionRewardEvent(address owner, uint action_id, uint256 reward);
 
     /**
      * setActionMaxYieldTimesEvent
@@ -15,7 +15,7 @@ interface IActionYieldFarmingAdmin {
      * @param uint action ID
      * @param uint max yield times
      */
-    event SetActionMaxYieldTimesEvent(address, uint, uint);
+    event SetActionMaxYieldTimesEvent(address owner, uint action_id, uint max_times);
 
     /**
      * Set the reward per actions

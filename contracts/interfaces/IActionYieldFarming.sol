@@ -8,7 +8,7 @@ interface IActionYieldFarming {
      * @param uint the action ID
      * @param uint256 reward amount
      */
-    event ActionYieldEvent(address, uint, uint256);
+    event ActionYieldEvent(address recipient, uint action_id, uint256 reward);
 
     /**
      * Yield to an action
