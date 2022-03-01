@@ -121,6 +121,42 @@ interface IDataManager {
     event CancelLikeDataDashboard(address, uint);
 
     /**
+     * @param sender
+     * @param ID
+     */
+    event DislikeDataSource(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelDislikeDataSource(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event DislikeDataChart(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelDislikeDataChart(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event DislikeDataDashboard(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelDislikeDataDashboard(address, uint);
+
+    /**
      * Create data source
      * @param name unique name
      * @param desc description
@@ -320,4 +356,46 @@ interface IDataManager {
      * Emits {CancelLikeDataDashboard}
      */
     function cancelLikeDataDataboard(uint) external;
+
+    /**
+     * Dislike a data source
+     * @param source_id source ID
+     * Emits {DislikeDataSource}
+     */
+    function dislikeDataSource(uint) external;
+
+    /**
+     * Cancel dislike a data source
+     * @param source_id source ID
+     * Emits {CancelDislikeDataSource}
+     */
+    function cancelDislikeDataSource(uint) external;
+
+    /**
+     * Dislike a data chart
+     * @param chart_id chart ID
+     * Emits {DislikeDataChart}
+     */
+    function dislikeDataChart(uint) external;
+
+    /**
+     * Cancel dislike a data chart
+     * @param chart_id chart ID
+     * Emits {CancelDislikeDataChart}
+     */
+    function cancelDislikeDataChart(uint) external;
+
+    /**
+     * Dislike a data dashboard
+     * @param dashboard_id dashboard ID
+     * Emits {DislikeDataDashboard}
+     */
+    function dislikeDataDashboard(uint) external;
+
+    /**
+     * Cancel dislike a data dashboard
+     * @param dashboard_id dashboard ID
+     * Emits {CancelDislikeDataDashboard}
+     */
+    function cancelDislikeDataDataboard(uint) external;
 }
