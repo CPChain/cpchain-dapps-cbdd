@@ -74,7 +74,7 @@ interface IDataManager {
      * @param type type
      * @param data params
      * @return sequence ID
-     * Emits {CreateDataSourceEvent}
+     * Emits {CreateDataChartEvent}
      */
     function createDataChart(string, uint, string, string, string) external returns (uint);
 
@@ -122,5 +122,50 @@ interface IDataManager {
      * Emits {DeleteDataSourceEvent}
      */
     function deleteDataSource(uint) returns (uint);
+
+    /**
+     * Update name
+     * @param ID
+     * @param name
+     * @return ID
+     * Emits {UpdateDataChartEvent} 
+     */
+    function updateNameOfDataChart(uint, string) returns (uint);
+
+    /**
+     * Update description
+     * @param ID
+     * @param desc
+     * @return ID
+     * Emits {UpdateDataChartEvent} 
+     */
+    function updateDescOfDataChart(uint, string) returns (uint);
+
+    /**
+     * Update source ID
+     * @param ID
+     * @param source ID
+     * @return ID
+     * Emits {UpdateDataChartEvent} 
+     */
+    function updateSourceIDOfDataChart(uint, uint) returns (uint);
+
+    /**
+     * Update type
+     * @param ID
+     * @param type
+     * @return ID
+     * Emits {UpdateDataChartEvent} 
+     */
+    function updateTypeOfDataChart(uint, string) returns (uint);
+
+    /**
+     * Update data(params)
+     * @param ID
+     * @param data
+     * @return ID
+     * Emits {UpdateDataChartEvent} 
+     */
+    function updateDataOfDataChart(uint, string) returns (uint);
 
 }

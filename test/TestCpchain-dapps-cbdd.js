@@ -1,4 +1,4 @@
-const Cpchain-dapps-cbdd = artifacts.require("Cpchain-dapps-cbdd");
+const ControllerIniter = artifacts.require("Cpchain-dapps-cbdd");
 
 contract("Cpchain-dapps-cbdd", (accounts) => {
     it("Greet", async () => {

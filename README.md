@@ -1,4 +1,4 @@
-# Cpchain-dapps-cbdd Contract
+# CBDD Contract
 
 ## Setup
 
