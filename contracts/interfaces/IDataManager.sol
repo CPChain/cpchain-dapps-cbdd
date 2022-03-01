@@ -56,6 +56,32 @@ interface IDataManager {
     event DeleteDataChartEvent(uint);
 
     /**
+     * Triggered when user create a new data dashboard
+     * @param id dashboard ID
+     * @param name unique name
+     * @param charts id of the data source
+     * @param desc description
+     * @param data params
+     */
+    event CreateDataDashboardEvent(uint, string, uint[], string, string);
+
+    /**
+     * Triggered when user update a data dashboard
+     * @param id dashboard ID
+     * @param name unique name
+     * @param charts id of the data source
+     * @param desc description
+     * @param data params
+     */
+    event UpdateDataDashboardEvent(uint, string, uint[], string, string);
+
+    /**
+     * Triggered when user delete a data dashboard
+     * @param ID
+     */
+    event DeleteDataDashboardEvent(uint);
+
+    /**
      * Create data source
      * @param name unique name
      * @param desc description
@@ -77,6 +103,17 @@ interface IDataManager {
      * Emits {CreateDataChartEvent}
      */
     function createDataChart(string, uint, string, string, string) external returns (uint);
+
+    /**
+     * Create data dashboard
+     * @param name unique name
+     * @param charts charts
+     * @param desc description
+     * @param data params
+     * @return sequence ID
+     * Emits {CreateDataDashboardEvent}
+     */
+    function createDataDashboard(string, uint[], string, string) external returns (uint);
 
     /**
      * Update name
@@ -166,4 +203,40 @@ interface IDataManager {
      * Emits {UpdateDataChartEvent} 
      */
     function updateDataOfDataChart(uint, string) returns (uint);
+
+    /**
+     * Update name
+     * @param ID
+     * @param name
+     * @return ID
+     * Emits {UpdateDataDashboardEvent} 
+     */
+    function updateNameOfDataDashboard(uint, string) returns (uint);
+
+    /**
+     * Update description
+     * @param ID
+     * @param name
+     * @return ID
+     * Emits {UpdateDataDashboardEvent} 
+     */
+    function updateDesciptionOfDataDashboard(uint, string) returns (uint);
+
+    /**
+     * Update charts
+     * @param ID
+     * @param name
+     * @return ID
+     * Emits {UpdateDataDashboardEvent} 
+     */
+    function updateChartsOfDataDashboard(uint, uint[]) returns (uint);
+
+    /**
+     * Update data(params)
+     * @param ID
+     * @param name
+     * @return ID
+     * Emits {UpdateDataDashboardEvent} 
+     */
+    function updateDataOfDataDashboard(uint, string) returns (uint);
 }
