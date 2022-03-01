@@ -7,5 +7,4 @@ interface ICommentAdminManager {
     function setMinCommentLength(uint) external;
 
     function setIsAllowedDislikeComment(bool) external;
-
 }

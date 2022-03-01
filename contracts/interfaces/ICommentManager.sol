@@ -8,6 +8,12 @@ interface ICommentManager {
 
     event AddCommentOfDataDashboard(uint dashboard_id, uint comment_id, address sender, string comment);
 
+    event UpdateComment(uint comment_id, string comment);
+
+    event ReplyComment(uint comment_id, uint reply_comment_id, address sender, string comment);
+
+    event DeleteComment(uint comment_id);
+
     event LikeComment(uint comment_id, address sender);
 
     event CancelLikeComment(uint comment_id, address sender);
