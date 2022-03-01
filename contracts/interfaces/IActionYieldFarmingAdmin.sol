@@ -7,7 +7,7 @@ interface IActionYieldFarmingAdmin {
      * @param uint action ID
      * @param uint256 reward per actions
      */
-    event setActionRewardEvent(address, uint, uint256);
+    event SetActionRewardEvent(address, uint, uint256);
 
     /**
      * setActionMaxYieldTimesEvent
@@ -15,14 +15,14 @@ interface IActionYieldFarmingAdmin {
      * @param uint action ID
      * @param uint max yield times
      */
-    event setActionMaxYieldTimesEvent(address, uint, uint);
+    event SetActionMaxYieldTimesEvent(address, uint, uint);
 
     /**
      * Set the reward per actions
      * 设置行为的单次激励数量
      * @param uint action ID
      * @param uint256 rewards
-     * Emits {setActionRewardEvent}
+     * Emits {SetActionRewardEvent}
      */
     function setActionReward(uint, uint256) external;
 
@@ -31,7 +31,7 @@ interface IActionYieldFarmingAdmin {
      * 设置行为的总激励次数
      * @param uint action ID
      * @param uint max reward times
-     * Emits {setActionMaxYieldTimesEvent}
+     * Emits {SetActionMaxYieldTimesEvent}
      */
     function setActionMaxYieldTimes(uint, uint) external;
 
