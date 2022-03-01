@@ -4,12 +4,13 @@ interface IDataManager {
     /**
      * Triggered when user create a new data source
      * @param id source ID
+     * @param owner address
      * @param name unique name
      * @param desc description
      * @param version version
      * @param url unique url
      */
-    event CreateDataSourceEvent(uint, string, string, string, string);
+    event CreateDataSourceEvent(uint, address, string, string, string, string);
     
     /**
      * Triggered when user update a data source
@@ -30,13 +31,14 @@ interface IDataManager {
     /**
      * Triggered when user create a new data chart
      * @param id chart ID
+     * @param owner address
      * @param name unique name
      * @param source_id id of the data source
      * @param desc description
      * @param type type
      * @param data params
      */
-    event CreateDataChartEvent(uint, string, uint, string, string, string);
+    event CreateDataChartEvent(uint, address, string, uint, string, string, string);
 
     /**
      * Triggered when user update a data chart
@@ -58,12 +60,13 @@ interface IDataManager {
     /**
      * Triggered when user create a new data dashboard
      * @param id dashboard ID
+     * @param owner address
      * @param name unique name
      * @param charts id of the data source
      * @param desc description
      * @param data params
      */
-    event CreateDataDashboardEvent(uint, string, uint[], string, string);
+    event CreateDataDashboardEvent(uint, address, string, uint[], string, string);
 
     /**
      * Triggered when user update a data dashboard
@@ -80,6 +83,42 @@ interface IDataManager {
      * @param ID
      */
     event DeleteDataDashboardEvent(uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event LikeDataSource(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelLikeDataSource(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event LikeDataChart(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelLikeDataChart(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event LikeDataDashboard(address, uint);
+
+    /**
+     * @param sender
+     * @param ID
+     */
+    event CancelLikeDataDashboard(address, uint);
 
     /**
      * Create data source
@@ -122,7 +161,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataSourceEvent} 
      */
-    function updateNameOfDataSource(uint, string) returns (uint);
+    function updateNameOfDataSource(uint, string) external returns (uint);
 
     /**
      * Update name
@@ -131,7 +170,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataSourceEvent} 
      */
-    function updateDescOfDataSource(uint, string) returns (uint);
+    function updateDescOfDataSource(uint, string) external returns (uint);
 
     /**
      * Update name
@@ -140,7 +179,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataSourceEvent} 
      */
-    function updateVersionOfDataSource(uint, string) returns (uint);
+    function updateVersionOfDataSource(uint, string) external returns (uint);
 
     /**
      * Update name
@@ -149,7 +188,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataSourceEvent} 
      */
-    function updateURLOfDataSource(uint, string) returns (uint);
+    function updateURLOfDataSource(uint, string) external returns (uint);
 
     /**
      * Delete data source
@@ -157,7 +196,7 @@ interface IDataManager {
      * @return ID
      * Emits {DeleteDataSourceEvent}
      */
-    function deleteDataSource(uint) returns (uint);
+    function deleteDataSource(uint) external returns (uint);
 
     /**
      * Update name
@@ -166,7 +205,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataChartEvent} 
      */
-    function updateNameOfDataChart(uint, string) returns (uint);
+    function updateNameOfDataChart(uint, string) external returns (uint);
 
     /**
      * Update description
@@ -175,7 +214,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataChartEvent} 
      */
-    function updateDescOfDataChart(uint, string) returns (uint);
+    function updateDescOfDataChart(uint, string) external returns (uint);
 
     /**
      * Update source ID
@@ -184,7 +223,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataChartEvent} 
      */
-    function updateSourceIDOfDataChart(uint, uint) returns (uint);
+    function updateSourceIDOfDataChart(uint, uint) external returns (uint);
 
     /**
      * Update type
@@ -193,7 +232,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataChartEvent} 
      */
-    function updateTypeOfDataChart(uint, string) returns (uint);
+    function updateTypeOfDataChart(uint, string) external returns (uint);
 
     /**
      * Update data(params)
@@ -202,7 +241,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataChartEvent} 
      */
-    function updateDataOfDataChart(uint, string) returns (uint);
+    function updateDataOfDataChart(uint, string) external returns (uint);
 
     /**
      * Update name
@@ -211,7 +250,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataDashboardEvent} 
      */
-    function updateNameOfDataDashboard(uint, string) returns (uint);
+    function updateNameOfDataDashboard(uint, string) external returns (uint);
 
     /**
      * Update description
@@ -220,7 +259,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataDashboardEvent} 
      */
-    function updateDesciptionOfDataDashboard(uint, string) returns (uint);
+    function updateDesciptionOfDataDashboard(uint, string) external returns (uint);
 
     /**
      * Update charts
@@ -229,7 +268,7 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataDashboardEvent} 
      */
-    function updateChartsOfDataDashboard(uint, uint[]) returns (uint);
+    function updateChartsOfDataDashboard(uint, uint[]) external returns (uint);
 
     /**
      * Update data(params)
@@ -238,5 +277,47 @@ interface IDataManager {
      * @return ID
      * Emits {UpdateDataDashboardEvent} 
      */
-    function updateDataOfDataDashboard(uint, string) returns (uint);
+    function updateDataOfDataDashboard(uint, string) external returns (uint);
+
+    /**
+     * Like a data source
+     * @param source_id source ID
+     * Emits {LikeDataSource}
+     */
+    function likeDataSource(uint) external;
+
+    /**
+     * Cancel like a data source
+     * @param source_id source ID
+     * Emits {CancelLikeDataSource}
+     */
+    function cancelLikeDataSource(uint) external;
+
+    /**
+     * Like a data chart
+     * @param chart_id chart ID
+     * Emits {LikeDataChart}
+     */
+    function likeDataChart(uint) external;
+
+    /**
+     * Cancel like a data chart
+     * @param chart_id chart ID
+     * Emits {CancelLikeDataChart}
+     */
+    function cancelLikeDataChart(uint) external;
+
+    /**
+     * Like a data dashboard
+     * @param dashboard_id dashboard ID
+     * Emits {LikeDataDashboard}
+     */
+    function likeDataDashboard(uint) external;
+
+    /**
+     * Cancel like a data dashboard
+     * @param dashboard_id dashboard ID
+     * Emits {CancelLikeDataDashboard}
+     */
+    function cancelLikeDataDataboard(uint) external;
 }
