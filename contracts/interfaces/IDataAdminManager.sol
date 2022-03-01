@@ -5,32 +5,32 @@ interface IDataAdminManager {
     /**
      * @param ID
      */
-    event EnableDataSourceEvent(uint);
+    event EnableDataSourceEvent(uint source_id);
 
     /**
      * @param ID
      */
-    event DisableDataSourceEvent(uint);
+    event DisableDataSourceEvent(uint source_id);
 
     /**
      * @param ID
      */
-    event EnableDataChartEvent(uint);
+    event EnableDataChartEvent(uint chart_id);
 
     /**
      * @param ID
      */
-    event DisableDataChartEvent(uint);
+    event DisableDataChartEvent(uint chart_id);
 
     /**
      * @param ID
      */
-    event EnableDataDashboardEvent(uint);
+    event EnableDataDashboardEvent(uint dashboard_id);
 
     /**
      * @param ID
      */
-    event DisableDataDashboardEvent(uint);
+    event DisableDataDashboardEvent(uint dashboard_id);
 
     /**
      * Allowed user dislike a data element

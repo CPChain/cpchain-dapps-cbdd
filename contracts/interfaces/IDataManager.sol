@@ -4,13 +4,14 @@ interface IDataManager {
     /**
      * Triggered when user create a new data source
      * @param id source ID
-     * @param owner address
+     * @param sender address
      * @param name unique name
      * @param desc description
      * @param version version
      * @param url unique url
      */
-    event CreateDataSourceEvent(uint, address, string, string, string, string);
+    event CreateDataSourceEvent(uint source_id, address sender, string name, string desc,
+        string version, string url);
     
     /**
      * Triggered when user update a data source
@@ -20,25 +21,26 @@ interface IDataManager {
      * @param version version
      * @param url unique url
      */
-    event UpdateDataSourceEvent(uint, string, string, string, string);
+    event UpdateDataSourceEvent(uint source_id, string name, string desc, string version, string url);
 
     /**
      * Triggered when user delete a data source
      * @param ID
      */
-    event DeleteDataSourceEvent(uint);
+    event DeleteDataSourceEvent(uint source_id);
 
     /**
      * Triggered when user create a new data chart
      * @param id chart ID
-     * @param owner address
+     * @param sender address
      * @param name unique name
      * @param source_id id of the data source
      * @param desc description
-     * @param type type
+     * @param chart_type type
      * @param data params
      */
-    event CreateDataChartEvent(uint, address, string, uint, string, string, string);
+    event CreateDataChartEvent(uint chart_id, address sender, string name, uint source_id,
+        string desc, string chart_type, string data);
 
     /**
      * Triggered when user update a data chart
@@ -49,24 +51,26 @@ interface IDataManager {
      * @param type type
      * @param data params
      */
-    event UpdateDataChartEvent(uint, string, uint, string, string, string);
+    event UpdateDataChartEvent(uint chart_id, string name, uint source_id, string desc,
+        string chart_type, string data);
 
     /**
      * Triggered when user delete a data chart
      * @param ID
      */
-    event DeleteDataChartEvent(uint);
+    event DeleteDataChartEvent(uint chart_id);
 
     /**
      * Triggered when user create a new data dashboard
      * @param id dashboard ID
-     * @param owner address
+     * @param sender address
      * @param name unique name
      * @param charts id of the data source
      * @param desc description
      * @param data params
      */
-    event CreateDataDashboardEvent(uint, address, string, uint[], string, string);
+    event CreateDataDashboardEvent(uint dashboard_id, address sender, string name,
+        uint[] charts, string desc, string data);
 
     /**
      * Triggered when user update a data dashboard
@@ -76,85 +80,86 @@ interface IDataManager {
      * @param desc description
      * @param data params
      */
-    event UpdateDataDashboardEvent(uint, string, uint[], string, string);
+    event UpdateDataDashboardEvent(uint dashboard_id, string sender, uint[] charts,
+        string desc, string data);
 
     /**
      * Triggered when user delete a data dashboard
      * @param ID
      */
-    event DeleteDataDashboardEvent(uint);
+    event DeleteDataDashboardEvent(uint dashboard_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event LikeDataSource(address, uint);
+    event LikeDataSource(address sender, uint source_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelLikeDataSource(address, uint);
+    event CancelLikeDataSource(address sender, uint source_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event LikeDataChart(address, uint);
+    event LikeDataChart(address sender, uint chart_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelLikeDataChart(address, uint);
+    event CancelLikeDataChart(address sender, uint chart_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event LikeDataDashboard(address, uint);
+    event LikeDataDashboard(address sender, uint dashboard_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelLikeDataDashboard(address, uint);
+    event CancelLikeDataDashboard(address sender, uint dashboard_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event DislikeDataSource(address, uint);
+    event DislikeDataSource(address sender, uint source_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelDislikeDataSource(address, uint);
+    event CancelDislikeDataSource(address sender, uint source_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event DislikeDataChart(address, uint);
+    event DislikeDataChart(address sender, uint chart_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelDislikeDataChart(address, uint);
+    event CancelDislikeDataChart(address sender, uint chart_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event DislikeDataDashboard(address, uint);
+    event DislikeDataDashboard(address sender, uint dashboard_id);
 
     /**
      * @param sender
      * @param ID
      */
-    event CancelDislikeDataDashboard(address, uint);
+    event CancelDislikeDataDashboard(address sender, uint dashboard_id);
 
     /**
      * Create data source
