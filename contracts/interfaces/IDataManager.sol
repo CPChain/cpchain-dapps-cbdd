@@ -162,6 +162,24 @@ interface IDataManager {
     event CancelDislikeDataDashboard(address sender, uint dashboard_id);
 
     /**
+     * @param version
+     * @param contract_addr
+     */
+    event RegisterDashSourceValidator(uint version, address contract_addr);
+
+    /**
+     * @param version
+     * @param contract_addr
+     */
+    event RegisterDashChartValidator(uint version, address contract_addr);
+
+    /**
+     * @param version
+     * @param contract_addr
+     */
+    event RegisterDashDashboardValidator(uint version, address contract_addr);
+
+    /**
      * Create data source
      * @param name unique name
      * @param desc description
@@ -403,4 +421,28 @@ interface IDataManager {
      * Emits {CancelDislikeDataDashboard}
      */
     function cancelDislikeDataDataboard(uint) external;
+
+    /**
+     * Register the validator contract address
+     * @param version
+     * @param contract_address
+     * Emits {RegisterDashSourceValidator}
+     */
+    function registerDashSourceValidator(uint, address) external;
+
+    /**
+     * Register the validator contract address
+     * @param version
+     * @param contract_address
+     * Emits {RegisterDashChartValidator}
+     */
+    function registerDashChartValidator(uint, address) external;
+
+    /**
+     * Register the validator contract address
+     * @param version
+     * @param contract_address
+     * Emits {RegisterDashDashboardValidator}
+     */
+    function registerDashDashboardValidator(uint, address) external;
 }
