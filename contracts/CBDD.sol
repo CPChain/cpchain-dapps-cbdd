@@ -1,11 +1,13 @@
 pragma solidity ^0.4.24;
 
+import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Claimable.sol";
+import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 import "./lib/MyERC20.sol";
 import "./interfaces/IActionYieldFarming.sol";
 import "./interfaces/IActionYieldFarmingAdmin.sol";
 import "./lib/Actions.sol";
 
-contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin {
+contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable {
 
     struct ActionReward {
         Actions.Action action;
@@ -13,6 +15,7 @@ contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin {
         uint max_times;
         uint current_reward_times;
         uint256 current_rewards;
+        bool existed;
     }
 
     mapping(uint => ActionReward) private action_rewards;
@@ -70,42 +73,59 @@ contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin {
             reward: reward,
             max_times: max_times,
             current_reward_times: 0,
-            current_rewards: 0
+            current_rewards: 0,
+            existed: true
         });
         actions.push(uint(action));
     }
     
     // Mint CBDD by controller contract (only can be called by controller contract)
     function actionYield(address recipient, uint action_id) external returns (uint256) {
+        if(action_rewards[action_id].reward > 0) {
+            // 行为需奖励
+            if (recipient != address(0x0)) {
+                action_rewards[action_id].current_reward_times += 1;
+                action_rewards[action_id].current_rewards += action_rewards[action_id].reward;
+                _mint(recipient, action_rewards[action_id].reward);
+            }
+        }
         return 0;
     }
 
-    function setActionReward(uint action_id, uint256 reward) external {
-
+    function setActionReward(uint action_id, uint256 reward) external onlyOwner onlyEnabled {
+        require(action_rewards[action_id].existed, "This action does not exists");
+        action_rewards[action_id].reward = reward;
+        emit SetActionRewardEvent(msg.sender, action_id, reward);
     }
 
-    function setActionMaxYieldTimes(uint action_id, uint max_times) external {
-
+    function setActionMaxYieldTimes(uint action_id, uint max_times) external onlyOwner onlyEnabled {
+        require(action_rewards[action_id].existed, "This action does not exists");
+        action_rewards[action_id].max_times = max_times;
+        emit SetActionMaxYieldTimesEvent(msg.sender, action_id, max_times);
     }
 
     function getCurrentYieldTimesOfAction(uint action_id) external view returns (uint) {
-        return 0;
+        return action_rewards[action_id].current_reward_times;
     }
 
     function getActionReward(uint action_id) external view returns (uint256) {
-        return 0;
+        return action_rewards[action_id].reward;
     }
 
     function getMaxYieldTimesOfAction(uint action_id) external view returns (uint) {
-        return 0;
+        return action_rewards[action_id].max_times;
     }
 
-    function getCurrentYieldRewardsOfAction(uint action_id) external view returns (uint256) {
-        return 0;
+    function getCurrentYieldRewardsOfAction(uint action_id) public view returns (uint256) {
+        return action_rewards[action_id].current_rewards;
     }
 
     function getCurrentRewardsOfAllAction() external view returns (uint256) {
-        return 0;
+        uint256 rewards = 0;
+        for(uint i = 0; i < actions.length; i++) {
+            rewards += getCurrentYieldRewardsOfAction(actions[i]);
+        }
+        return rewards;
     }
 
     function getType(uint a) public pure returns (uint) {
