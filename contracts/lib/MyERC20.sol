@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "./interfaces/IToken.sol";
-import "./lib/SafeMath.sol";
+import "../interfaces/IToken.sol";
+import "./SafeMath.sol";
 
 /**
  * @dev Implementation of the `IERC20` interface.

@@ -15,39 +15,39 @@ interface ITagManager {
     event RemoveTagOfDataDashboard(uint dashboard_id, address sender, string tags);
 
     /**
-     * @param source_id
+     * @param source_id source ID
      * @param tags split by ","
      */
-    function addTagOfDataSource(uint, string) external;
+    function addTagOfDataSource(uint source_id, string tags) external;
 
     /**
-     * @param source_id
+     * @param source_id source ID
      * @param tags split by ","
      */
-    function removeTagOfDataSource(uint, string) external;
+    function removeTagOfDataSource(uint source_id, string tags) external;
 
     /**
-     * @param chart_id
+     * @param chart_id chart ID
      * @param tags split by ","
      */
-    function addTagOfDataChart(uint, string) external;
+    function addTagOfDataChart(uint chart_id, string tags) external;
 
     /**
-     * @param chart_id
+     * @param chart_id chart ID
      * @param tags split by ","
      */
-    function removeTagOfDataChart(uint, string) external;
+    function removeTagOfDataChart(uint chart_id, string tags) external;
 
     /**
-     * @param dashboard_id
+     * @param dashboard_id dashboard ID
      * @param tags split by ","
      */
-    function addTagOfDataDashboard(uint, string) external;
+    function addTagOfDataDashboard(uint dashboard_id, string tags) external;
 
     /**
-     * @param dashboard_id
+     * @param dashboard_id dashboard ID
      * @param tags split by ","
      */
-    function removeTagOfDataDashboard(uint, string) external;
+    function removeTagOfDataDashboard(uint dashboard_id, string tags) external;
 
 }

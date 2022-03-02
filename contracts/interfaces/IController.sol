@@ -19,11 +19,11 @@ interface IController {
      * @param version contract version
      * @param contract_address AddressValidator contract
      */
-    function registerAddressValidator(uint, address) external;
+    function registerAddressValidator(uint version, address contract_address) external;
 
-    function registerDataManager(uint, address) external;
+    function registerDataManager(uint version, address contract_address) external;
 
-    function registerTagManager(uint, address) external;
+    function registerTagManager(uint version, address contract_address) external;
 
-    function registerCommentManager(uint, address) external;
+    function registerCommentManager(uint version, address contract_address) external;
 }

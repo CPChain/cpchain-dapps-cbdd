@@ -3,7 +3,8 @@ pragma solidity ^0.4.24;
 interface IAddressValidator {
     /**
      * Validate address
-     * @param addr
+     * @param addr address
+     * @return (verified, error)
      */
-    function validateAddress(address) external returns (bool, string);
+    function validateAddress(address addr) external returns (bool, string);
 }

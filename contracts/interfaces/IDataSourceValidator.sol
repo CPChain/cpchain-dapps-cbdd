@@ -9,5 +9,5 @@ interface IDataSourceValidator {
      * @param url unique url
      * @return validated
      */
-    function validateDataSource(string, string, string, string) external returns (bool);
+    function validateDataSource(string name, string desc, string version, string url) external returns (bool);
 }

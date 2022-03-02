@@ -5,15 +5,15 @@ interface ITagAdminManager {
     /**
      * @param tags split by ","
      */
-    function addTagToWhiteList(string) external;
+    function addTagToWhiteList(string tags) external;
 
     /**
      * @param tags split by ","
      */
-    function removeTagFromWhiteList(string) external;
+    function removeTagFromWhiteList(string tags) external;
 
     /**
-     * @param max_tags
+     * @param max_tags max tags
      */
-    function setMaxTagsPerDataElement(uint) external;
+    function setMaxTagsPerDataElement(uint max_tags) external;
 }

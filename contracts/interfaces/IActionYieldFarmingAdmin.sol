@@ -4,67 +4,67 @@ interface IActionYieldFarmingAdmin {
     /**
      * setActionRewardEvent
      * @param owner address
-     * @param uint action ID
-     * @param uint256 reward per actions
+     * @param action_id action ID
+     * @param reward reward per actions
      */
     event SetActionRewardEvent(address owner, uint action_id, uint256 reward);
 
     /**
      * setActionMaxYieldTimesEvent
      * @param owner address
-     * @param uint action ID
-     * @param uint max yield times
+     * @param action_id action ID
+     * @param max_times max yield times
      */
     event SetActionMaxYieldTimesEvent(address owner, uint action_id, uint max_times);
 
     /**
      * Set the reward per actions
      * 设置行为的单次激励数量
-     * @param uint action ID
-     * @param uint256 rewards
      * Emits {SetActionRewardEvent}
+     * @param action_id action ID
+     * @param reward rewards
      */
-    function setActionReward(uint, uint256) external;
+    function setActionReward(uint action_id, uint256 reward) external;
 
     /**
      * Set the max reward times per actions
      * 设置行为的总激励次数
-     * @param uint action ID
-     * @param uint max reward times
      * Emits {SetActionMaxYieldTimesEvent}
+     * @param action_id action ID
+     * @param max_times max reward times
      */
-    function setActionMaxYieldTimes(uint, uint) external;
+    function setActionMaxYieldTimes(uint action_id, uint max_times) external;
 
     /**
      * Get current reward times of an action
      * 获取某行为当前已激励次数
-     * @param uint action ID
+     * @param action_id action ID
      * @return times
      */
-    function getCurrentYieldTimesOfAction(uint) external view returns (uint);
+    function getCurrentYieldTimesOfAction(uint action_id) external view returns (uint);
 
     /**
      * Get reward of an action
      * 获取某行为奖励一次的金额
-     * @param uint action ID
+     * @param action_id action ID
      * @return reward
      */
-    function getActionReward(uint) external view returns (uint256);
+    function getActionReward(uint action_id) external view returns (uint256);
 
     /**
      * Get the max reward times of an action
      * 获取某行为最大激励次数
-     * @param uint action ID
+     * @param action_id action ID
      * @return times
      */
-    function getMaxYieldTimesOfAction(uint) external view returns (uint);
+    function getMaxYieldTimesOfAction(uint action_id) external view returns (uint);
 
     /**
      * Get all yield rewards of an action now
      * 获取某行为当前发出的总激励
-     * @param uint action ID
+     * @param action_id action ID
      */
-    function getCurrentYieldRewardsOfAction(uint) external view returns (uint256);
+    function getCurrentYieldRewardsOfAction(uint action_id) external view returns (uint256);
 
     /**
      * Get all rewards of all action now
@@ -76,10 +76,10 @@ interface IActionYieldFarmingAdmin {
     /**
      * Get max yield rewards of an action
      * 获取某行为可发出的总激励
-     * @param uint action ID
+     * @param action_id action ID
      * @return rewards
      */
-    function getMaxYieldRewardsOfAction(uint) external view returns (uint256);
+    function getMaxYieldRewardsOfAction(uint action_id) external view returns (uint256);
 
     /**
      * Get max rewards of all action

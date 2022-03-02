@@ -8,5 +8,5 @@ interface IDataDashboardValidator {
      * @param data params
      * @return validated
      */
-    function validateDataDashboard(string, string, string) external returns (bool);
+    function validateDataDashboard(string name, string desc, string data) external returns (bool);
 }

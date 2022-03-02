@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 interface IDataManager {
     /**
      * Triggered when user create a new data source
-     * @param id source ID
+     * @param source_id source ID
      * @param sender address
      * @param name unique name
      * @param desc description
@@ -15,7 +15,7 @@ interface IDataManager {
     
     /**
      * Triggered when user update a data source
-     * @param id source ID
+     * @param source_id source ID
      * @param name unique name
      * @param desc description
      * @param version version
@@ -25,13 +25,13 @@ interface IDataManager {
 
     /**
      * Triggered when user delete a data source
-     * @param ID
+     * @param source_id source ID
      */
     event DeleteDataSourceEvent(uint source_id);
 
     /**
      * Triggered when user create a new data chart
-     * @param id chart ID
+     * @param chart_id chart ID
      * @param sender address
      * @param name unique name
      * @param source_id id of the data source
@@ -44,11 +44,11 @@ interface IDataManager {
 
     /**
      * Triggered when user update a data chart
-     * @param id chart ID
+     * @param chart_id chart ID
      * @param name unique name
      * @param source_id id of the data source
      * @param desc description
-     * @param type type
+     * @param chart_type type
      * @param data params
      */
     event UpdateDataChartEvent(uint chart_id, string name, uint source_id, string desc,
@@ -56,13 +56,13 @@ interface IDataManager {
 
     /**
      * Triggered when user delete a data chart
-     * @param ID
+     * @param chart_id chart ID
      */
     event DeleteDataChartEvent(uint chart_id);
 
     /**
      * Triggered when user create a new data dashboard
-     * @param id dashboard ID
+     * @param dashboard_id dashboard ID
      * @param sender address
      * @param name unique name
      * @param charts id of the data source
@@ -74,375 +74,375 @@ interface IDataManager {
 
     /**
      * Triggered when user update a data dashboard
-     * @param id dashboard ID
+     * @param dashboard_id dashboard ID
      * @param name unique name
      * @param charts id of the data source
      * @param desc description
      * @param data params
      */
-    event UpdateDataDashboardEvent(uint dashboard_id, string sender, uint[] charts,
+    event UpdateDataDashboardEvent(uint dashboard_id, string name, uint[] charts,
         string desc, string data);
 
     /**
      * Triggered when user delete a data dashboard
-     * @param ID
+     * @param dashboard_id dashboard ID
      */
     event DeleteDataDashboardEvent(uint dashboard_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param source_id source ID
      */
     event LikeDataSource(address sender, uint source_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param source_id source ID
      */
     event CancelLikeDataSource(address sender, uint source_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param chart_id chart ID
      */
     event LikeDataChart(address sender, uint chart_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param chart_id chart ID
      */
     event CancelLikeDataChart(address sender, uint chart_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param dashboard_id dashboard ID
      */
     event LikeDataDashboard(address sender, uint dashboard_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param dashboard_id dashboard ID
      */
     event CancelLikeDataDashboard(address sender, uint dashboard_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param source_id source ID
      */
     event DislikeDataSource(address sender, uint source_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param source_id source ID
      */
     event CancelDislikeDataSource(address sender, uint source_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param chart_id chart ID
      */
     event DislikeDataChart(address sender, uint chart_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param chart_id chart ID
      */
     event CancelDislikeDataChart(address sender, uint chart_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param dashboard_id dashboard ID
      */
     event DislikeDataDashboard(address sender, uint dashboard_id);
 
     /**
-     * @param sender
-     * @param ID
+     * @param sender sender
+     * @param dashboard_id dashboard ID
      */
     event CancelDislikeDataDashboard(address sender, uint dashboard_id);
 
     /**
-     * @param version
-     * @param contract_addr
+     * @param version version
+     * @param contract_addr contract address
      */
     event RegisterDashSourceValidator(uint version, address contract_addr);
 
     /**
-     * @param version
-     * @param contract_addr
+     * @param version version
+     * @param contract_addr contract address
      */
     event RegisterDashChartValidator(uint version, address contract_addr);
 
     /**
-     * @param version
-     * @param contract_addr
+     * @param version version
+     * @param contract_addr contract address
      */
     event RegisterDashDashboardValidator(uint version, address contract_addr);
 
     /**
      * Create data source
+     * Emits {CreateDataSourceEvent}
      * @param name unique name
      * @param desc description
      * @param version version
      * @param url unique url
      * @return sequence ID
-     * Emits {CreateDataSourceEvent}
      */
-    function createDataSource(string, string, string, string) external returns (uint);
+    function createDataSource(string name, string desc, string version, string url) external returns (uint);
 
     /**
      * Create data chart
+     * Emits {CreateDataChartEvent}
      * @param name unique name
      * @param source_id id of the data source
      * @param desc description
-     * @param type type
+     * @param chart_type type
      * @param data params
      * @return sequence ID
-     * Emits {CreateDataChartEvent}
      */
-    function createDataChart(string, uint, string, string, string) external returns (uint);
+    function createDataChart(string name, uint source_id, string desc, string chart_type, string data) external returns (uint);
 
     /**
      * Create data dashboard
+     * Emits {CreateDataDashboardEvent}
      * @param name unique name
      * @param charts charts
      * @param desc description
      * @param data params
      * @return sequence ID
-     * Emits {CreateDataDashboardEvent}
      */
-    function createDataDashboard(string, uint[], string, string) external returns (uint);
+    function createDataDashboard(string name, uint[] charts, string desc, string data) external returns (uint);
 
     /**
      * Update name
-     * @param ID
-     * @param name
+     * Emits {UpdateDataSourceEvent}
+     * @param id ID
+     * @param name name
      * @return ID
-     * Emits {UpdateDataSourceEvent} 
      */
-    function updateNameOfDataSource(uint, string) external returns (uint);
+    function updateNameOfDataSource(uint id, string name) external returns (uint);
 
     /**
-     * Update name
-     * @param ID
-     * @param desc
+     * Update description
+     * Emits {UpdateDataSourceEvent}
+     * @param id ID
+     * @param desc description
      * @return ID
-     * Emits {UpdateDataSourceEvent} 
      */
-    function updateDescOfDataSource(uint, string) external returns (uint);
+    function updateDescOfDataSource(uint id, string desc) external returns (uint);
 
     /**
-     * Update name
-     * @param ID
-     * @param version
+     * Update version
+     * Emits {UpdateDataSourceEvent}
+     * @param id ID
+     * @param version version
      * @return ID
-     * Emits {UpdateDataSourceEvent} 
      */
-    function updateVersionOfDataSource(uint, string) external returns (uint);
+    function updateVersionOfDataSource(uint id, string version) external returns (uint);
 
     /**
-     * Update name
-     * @param ID
-     * @param url
+     * Update url
+     * Emits {UpdateDataSourceEvent}
+     * @param id ID
+     * @param url URL
      * @return ID
-     * Emits {UpdateDataSourceEvent} 
      */
-    function updateURLOfDataSource(uint, string) external returns (uint);
+    function updateURLOfDataSource(uint id, string url) external returns (uint);
 
     /**
      * Delete data source
-     * @param ID
-     * @return ID
      * Emits {DeleteDataSourceEvent}
+     * @param id ID
+     * @return ID
      */
-    function deleteDataSource(uint) external returns (uint);
+    function deleteDataSource(uint id) external returns (uint);
 
     /**
      * Update name
-     * @param ID
-     * @param name
-     * @return ID
      * Emits {UpdateDataChartEvent} 
+     * @param id ID
+     * @param name name
+     * @return ID
      */
-    function updateNameOfDataChart(uint, string) external returns (uint);
+    function updateNameOfDataChart(uint id, string name) external returns (uint);
 
     /**
      * Update description
-     * @param ID
-     * @param desc
-     * @return ID
      * Emits {UpdateDataChartEvent} 
+     * @param id ID
+     * @param desc description
+     * @return ID
      */
-    function updateDescOfDataChart(uint, string) external returns (uint);
+    function updateDescOfDataChart(uint id, string desc) external returns (uint);
 
     /**
      * Update source ID
-     * @param ID
-     * @param source ID
-     * @return ID
      * Emits {UpdateDataChartEvent} 
+     * @param id ID
+     * @param source_id data source ID
+     * @return ID
      */
-    function updateSourceIDOfDataChart(uint, uint) external returns (uint);
+    function updateSourceIDOfDataChart(uint id, uint source_id) external returns (uint);
 
     /**
      * Update type
-     * @param ID
-     * @param type
+     * Emits {UpdateDataChartEvent}
+     * @param id ID
+     * @param chart_type chart type
      * @return ID
-     * Emits {UpdateDataChartEvent} 
      */
-    function updateTypeOfDataChart(uint, string) external returns (uint);
+    function updateTypeOfDataChart(uint id, string chart_type) external returns (uint);
 
     /**
      * Update data(params)
-     * @param ID
-     * @param data
+     * Emits {UpdateDataChartEvent}
+     * @param id ID
+     * @param data data
      * @return ID
-     * Emits {UpdateDataChartEvent} 
      */
-    function updateDataOfDataChart(uint, string) external returns (uint);
+    function updateDataOfDataChart(uint id, string data) external returns (uint);
 
     /**
      * Update name
-     * @param ID
-     * @param name
+     * Emits {UpdateDataDashboardEvent}
+     * @param id ID
+     * @param name name
      * @return ID
-     * Emits {UpdateDataDashboardEvent} 
      */
-    function updateNameOfDataDashboard(uint, string) external returns (uint);
+    function updateNameOfDataDashboard(uint id, string name) external returns (uint);
 
     /**
      * Update description
-     * @param ID
-     * @param name
+     * Emits {UpdateDataDashboardEvent}
+     * @param id ID
+     * @param desc ddescription
      * @return ID
-     * Emits {UpdateDataDashboardEvent} 
      */
-    function updateDesciptionOfDataDashboard(uint, string) external returns (uint);
+    function updateDesciptionOfDataDashboard(uint id, string desc) external returns (uint);
 
     /**
      * Update charts
-     * @param ID
-     * @param name
+     * Emits {UpdateDataDashboardEvent}
+     * @param id ID
+     * @param charts charts list
      * @return ID
-     * Emits {UpdateDataDashboardEvent} 
      */
-    function updateChartsOfDataDashboard(uint, uint[]) external returns (uint);
+    function updateChartsOfDataDashboard(uint id, uint[] charts) external returns (uint);
 
     /**
      * Update data(params)
-     * @param ID
-     * @param name
+     * Emits {UpdateDataDashboardEvent}
+     * @param id ID
+     * @param data data
      * @return ID
-     * Emits {UpdateDataDashboardEvent} 
      */
-    function updateDataOfDataDashboard(uint, string) external returns (uint);
+    function updateDataOfDataDashboard(uint id, string data) external returns (uint);
 
     /**
      * Like a data source
-     * @param source_id source ID
      * Emits {LikeDataSource}
+     * @param source_id source ID
      */
-    function likeDataSource(uint) external;
+    function likeDataSource(uint source_id) external;
 
     /**
      * Cancel like a data source
-     * @param source_id source ID
      * Emits {CancelLikeDataSource}
+     * @param source_id source ID
      */
-    function cancelLikeDataSource(uint) external;
+    function cancelLikeDataSource(uint source_id) external;
 
     /**
      * Like a data chart
-     * @param chart_id chart ID
      * Emits {LikeDataChart}
+     * @param chart_id chart ID
      */
-    function likeDataChart(uint) external;
+    function likeDataChart(uint chart_id) external;
 
     /**
      * Cancel like a data chart
-     * @param chart_id chart ID
      * Emits {CancelLikeDataChart}
+     * @param chart_id chart ID
      */
-    function cancelLikeDataChart(uint) external;
+    function cancelLikeDataChart(uint chart_id) external;
 
     /**
      * Like a data dashboard
-     * @param dashboard_id dashboard ID
      * Emits {LikeDataDashboard}
+     * @param dashboard_id dashboard ID
      */
-    function likeDataDashboard(uint) external;
+    function likeDataDashboard(uint dashboard_id) external;
 
     /**
      * Cancel like a data dashboard
-     * @param dashboard_id dashboard ID
      * Emits {CancelLikeDataDashboard}
+     * @param dashboard_id dashboard ID
      */
-    function cancelLikeDataDataboard(uint) external;
+    function cancelLikeDataDataboard(uint dashboard_id) external;
 
     /**
      * Dislike a data source
-     * @param source_id source ID
      * Emits {DislikeDataSource}
+     * @param source_id source ID
      */
-    function dislikeDataSource(uint) external;
+    function dislikeDataSource(uint source_id) external;
 
     /**
      * Cancel dislike a data source
-     * @param source_id source ID
      * Emits {CancelDislikeDataSource}
+     * @param source_id source ID
      */
-    function cancelDislikeDataSource(uint) external;
+    function cancelDislikeDataSource(uint source_id) external;
 
     /**
      * Dislike a data chart
-     * @param chart_id chart ID
      * Emits {DislikeDataChart}
+     * @param chart_id chart ID
      */
-    function dislikeDataChart(uint) external;
+    function dislikeDataChart(uint chart_id) external;
 
     /**
      * Cancel dislike a data chart
-     * @param chart_id chart ID
      * Emits {CancelDislikeDataChart}
+     * @param chart_id chart ID
      */
-    function cancelDislikeDataChart(uint) external;
+    function cancelDislikeDataChart(uint chart_id) external;
 
     /**
      * Dislike a data dashboard
-     * @param dashboard_id dashboard ID
      * Emits {DislikeDataDashboard}
+     * @param dashboard_id dashboard ID
      */
-    function dislikeDataDashboard(uint) external;
+    function dislikeDataDashboard(uint dashboard_id) external;
 
     /**
      * Cancel dislike a data dashboard
-     * @param dashboard_id dashboard ID
      * Emits {CancelDislikeDataDashboard}
+     * @param dashboard_id dashboard ID
      */
-    function cancelDislikeDataDataboard(uint) external;
+    function cancelDislikeDataDataboard(uint dashboard_id) external;
 
     /**
      * Register the validator contract address
-     * @param version
-     * @param contract_address
      * Emits {RegisterDashSourceValidator}
+     * @param version version
+     * @param contract_address contract address
      */
-    function registerDashSourceValidator(uint, address) external;
+    function registerDashSourceValidator(uint version, address contract_address) external;
 
     /**
      * Register the validator contract address
-     * @param version
-     * @param contract_address
      * Emits {RegisterDashChartValidator}
+     * @param version version
+     * @param contract_address contract address
      */
-    function registerDashChartValidator(uint, address) external;
+    function registerDashChartValidator(uint version, address contract_address) external;
 
     /**
      * Register the validator contract address
-     * @param version
-     * @param contract_address
      * Emits {RegisterDashDashboardValidator}
+     * @param version version
+     * @param contract_address contract address
      */
-    function registerDashDashboardValidator(uint, address) external;
+    function registerDashDashboardValidator(uint version, address contract_address) external;
 }
