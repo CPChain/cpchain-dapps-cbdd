@@ -38,12 +38,12 @@ contract MyERC20 is IToken {
     string private _symbol;
     uint8 private _decimals;
 
-    constructor () public {
-        _name = "CPChain Big Data Dashboard";
-        _symbol = "CBDD";
-        _decimals = 18;
+    constructor (string name, string symbol, uint8 decimals) public {
+        _name = name;
+        _symbol = symbol;
+        _decimals = decimals;
 
-        // 挖矿是动态的
+        // 无预置代币
         // _mint(msg.sender, 100000 * 10 ** uint256(18)); // CAUTION!
     }
 
