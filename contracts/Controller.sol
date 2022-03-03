@@ -2,6 +2,8 @@ pragma solidity ^0.4.24;
 
 import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Claimable.sol";
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
+
+import "./interfaces/IDataManager.sol";
 import "./interfaces/IController.sol";
 import "./interfaces/IVersion.sol";
 import "./interfaces/IControllerIniter.sol";
@@ -19,6 +21,9 @@ contract Controller is Claimable, Enable, IController {
 
     // CBDD ERC20 contract
     IActionYieldFarming cbdd;
+
+    // Data Manager contract
+    IDataManager dataManager;
 
     struct MyContract {
         address addr;
@@ -89,4 +94,124 @@ contract Controller is Claimable, Enable, IController {
     function yieldTest(address recipient) external initedCBDD onlyEnabled onlyOwner {
         cbdd.actionYield(recipient, address(0x0), uint(Actions.Action.CREATE_DATA_SOURCE));
     }
+
+    // Data Manager Proxy
+    function createDataSource(string name, string desc, string version, string url) external returns (uint) {
+        // TODO 地址不在黑名单
+        uint id = dataManager.createDataSource(name, desc, version, url);
+        // yield
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.CREATE_DATA_SOURCE));
+        return id;
+    }
+
+    function createDataChart(string name, uint source_id, string desc, string chart_type, string data) external returns (uint) {
+        return 0;
+    }
+
+    function createDataDashboard(string name, uint[] charts, string desc, string data) external returns (uint) {
+        return 0;
+    }
+
+    function updateNameOfDataSource(uint id, string name) external returns (uint) {
+        return 0;
+    }
+
+    function updateDescOfDataSource(uint id, string desc) external returns (uint) {
+        return 0;
+    }
+
+    function updateVersionOfDataSource(uint id, string version) external returns (uint) {
+        return 0;
+    }
+
+    function updateURLOfDataSource(uint id, string url) external returns (uint) {
+        return 0;
+    }
+
+    function deleteDataSource(uint id) external returns (uint) {
+        return 0;
+    }
+
+    function updateNameOfDataChart(uint id, string name) external returns (uint) {
+        return 0;
+    }
+
+    function updateDescOfDataChart(uint id, string desc) external returns (uint) {
+        return 0;
+    }
+
+    function updateSourceIDOfDataChart(uint id, uint source_id) external returns (uint) {
+        return 0;
+    }
+
+    function updateTypeOfDataChart(uint id, string chart_type) external returns (uint) {
+        return 0;
+    }
+
+    function updateDataOfDataChart(uint id, string data) external returns (uint) {
+        return 0;
+    }
+
+    function updateNameOfDataDashboard(uint id, string name) external returns (uint) {
+        return 0;
+    }
+
+    function updateDesciptionOfDataDashboard(uint id, string desc) external returns (uint) {
+        return 0;
+    }
+
+    function updateChartsOfDataDashboard(uint id, uint[] charts) external returns (uint) {
+        return 0;
+    }
+
+    function updateDataOfDataDashboard(uint id, string data) external returns (uint) {
+        return 0;
+    }
+
+    function likeDataSource(uint source_id) external {
+        // TODO 已被奖励过点赞某数据源的地址，取消点赞后再次点赞，双方都不再进行奖励
+    }
+
+    function cancelLikeDataSource(uint source_id) external {
+    }
+
+    function likeDataChart(uint chart_id) external {
+    }
+
+    function cancelLikeDataChart(uint chart_id) external {
+    }
+
+    function likeDataDashboard(uint dashboard_id) external {
+    }
+
+    function cancelLikeDataDataboard(uint dashboard_id) external {
+    }
+
+    function dislikeDataSource(uint source_id) external {
+    }
+
+    function cancelDislikeDataSource(uint source_id) external {
+    }
+
+    function dislikeDataChart(uint chart_id) external {
+    }
+
+    function cancelDislikeDataChart(uint chart_id) external {
+    }
+
+    function dislikeDataDashboard(uint dashboard_id) external {
+    }
+
+    function cancelDislikeDataDataboard(uint dashboard_id) external {
+    }
+
+    function registerDashSourceValidator(uint version, address contract_address) external {
+    }
+
+    function registerDashChartValidator(uint version, address contract_address) external {
+    }
+
+    function registerDashDashboardValidator(uint version, address contract_address) external {
+    }
+    // Data Manager Proxy End
 }
