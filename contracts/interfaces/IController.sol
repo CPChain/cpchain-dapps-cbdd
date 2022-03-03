@@ -13,6 +13,8 @@ interface IController {
 
     event RegisterCommentManager(uint version, address contract_addr);
 
+    event RegisterCBDDToken(uint version, address contract_addr);
+
     /**
      * Register the address of AddressValidator contract
      * 注册合约地址，合约需已实现 IVersion 接口，且 version 与传入的参数相同
@@ -26,4 +28,6 @@ interface IController {
     function registerTagManager(uint version, address contract_address) external;
 
     function registerCommentManager(uint version, address contract_address) external;
+
+    function registerCBDDToken(uint version, address contract_address) external;
 }

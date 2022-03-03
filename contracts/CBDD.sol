@@ -7,9 +7,11 @@ import "./interfaces/IActionYieldFarming.sol";
 import "./interfaces/IActionYieldFarmingAdmin.sol";
 import "./lib/Actions.sol";
 import "./lib/ControllerIniter.sol";
+import "./interfaces/IVersion.sol";
 
-contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable, ControllerIniter {
-
+contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable, ControllerIniter, IVersion {
+    uint _version = 0;
+    
     struct ActionReward {
         Actions.Action action;
         uint256 reward;
@@ -24,6 +26,10 @@ contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimab
 
     constructor() public MyERC20("CPChain Big Data Dashboard", "CPC", uint8(18)) {
         _init_actions_reward();
+    }
+
+    function version() public returns (uint) {
+        return _version;
     }
 
     function _init_actions_reward() private {
