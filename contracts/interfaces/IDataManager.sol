@@ -93,91 +93,73 @@ interface IDataManager {
      * @param sender sender
      * @param source_id source ID
      */
-    event LikeDataSource(address sender, uint source_id);
+    event LikeDataSourceEvent(address sender, uint source_id);
 
     /**
      * @param sender sender
      * @param source_id source ID
      */
-    event CancelLikeDataSource(address sender, uint source_id);
+    event CancelLikeDataSourceEvent(address sender, uint source_id);
 
     /**
      * @param sender sender
      * @param chart_id chart ID
      */
-    event LikeDataChart(address sender, uint chart_id);
+    event LikeDataChartEvent(address sender, uint chart_id);
 
     /**
      * @param sender sender
      * @param chart_id chart ID
      */
-    event CancelLikeDataChart(address sender, uint chart_id);
+    event CancelLikeDataChartEvent(address sender, uint chart_id);
 
     /**
      * @param sender sender
      * @param dashboard_id dashboard ID
      */
-    event LikeDataDashboard(address sender, uint dashboard_id);
+    event LikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
      * @param sender sender
      * @param dashboard_id dashboard ID
      */
-    event CancelLikeDataDashboard(address sender, uint dashboard_id);
+    event CancelLikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
      * @param sender sender
      * @param source_id source ID
      */
-    event DislikeDataSource(address sender, uint source_id);
+    event DislikeDataSourceEvent(address sender, uint source_id);
 
     /**
      * @param sender sender
      * @param source_id source ID
      */
-    event CancelDislikeDataSource(address sender, uint source_id);
+    event CancelDislikeDataSourceEvent(address sender, uint source_id);
 
     /**
      * @param sender sender
      * @param chart_id chart ID
      */
-    event DislikeDataChart(address sender, uint chart_id);
+    event DislikeDataChartEvent(address sender, uint chart_id);
 
     /**
      * @param sender sender
      * @param chart_id chart ID
      */
-    event CancelDislikeDataChart(address sender, uint chart_id);
+    event CancelDislikeDataChartEvent(address sender, uint chart_id);
 
     /**
      * @param sender sender
      * @param dashboard_id dashboard ID
      */
-    event DislikeDataDashboard(address sender, uint dashboard_id);
+    event DislikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
      * @param sender sender
      * @param dashboard_id dashboard ID
      */
-    event CancelDislikeDataDashboard(address sender, uint dashboard_id);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashSourceValidator(uint version, address contract_addr);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashChartValidator(uint version, address contract_addr);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashDashboardValidator(uint version, address contract_addr);
+    event CancelDislikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
      * Create data source
@@ -421,28 +403,4 @@ interface IDataManager {
      * @param dashboard_id dashboard ID
      */
     function cancelDislikeDataDataboard(uint dashboard_id) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashSourceValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashSourceValidator(uint version, address contract_address) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashChartValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashChartValidator(uint version, address contract_address) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashDashboardValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashDashboardValidator(uint version, address contract_address) external;
 }

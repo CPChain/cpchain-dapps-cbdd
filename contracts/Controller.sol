@@ -31,8 +31,9 @@ contract Controller is Claimable, Enable, IController {
     }
     mapping(uint => MyContract) private my_contracts;
 
-    constructor(address cbdd_addr) public {
+    constructor(address cbdd_addr, address data_manager_addr) public {
         _setContract(CONTRACTS.CBDD_TOKEN, cbdd_addr);
+        _setContract(CONTRACTS.DATA_MANAGER, data_manager_addr);
     }
 
     modifier initedCBDD() {require(my_contracts[uint(CONTRACTS.CBDD_TOKEN)].addr != address(0x0)); _;}
@@ -62,6 +63,9 @@ contract Controller is Claimable, Enable, IController {
         if (code == CONTRACTS.CBDD_TOKEN) {
             cbdd = IActionYieldFarming(addr);
             emit RegisterCBDDToken(my_contracts[uint(code)].version, addr);
+        } else if (code == CONTRACTS.DATA_MANAGER) {
+            dataManager = IDataManager(addr);
+            emit RegisterDataManager(my_contracts[uint(code)].version, addr);
         }
     }
 
@@ -73,6 +77,7 @@ contract Controller is Claimable, Enable, IController {
     function registerDataManager(uint version, address contract_address) external {
         IVersion versionInstance = IVersion(contract_address);
         require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+        _setContract(CONTRACTS.DATA_MANAGER, contract_address);
     }
 
     function registerTagManager(uint version, address contract_address) external {

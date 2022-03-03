@@ -8,14 +8,16 @@ import "./interfaces/IVersion.sol";
 import "./lib/ControllerIniter.sol";
 import "./lib/Strings.sol";
 
-contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, ControllerIniter {
+contract DataManager is Enable, IVersion, ControllerIniter, IDataManager {
     // context
     struct Context {
+        uint version;
         bool allowedDislike;
         uint maxLenOfName;
         uint minLenOfName;
         uint maxLenOfDescription;
         uint minLenOfDescription;
+        uint addressDataElementsUpper;
     }
     Context private context;
 
@@ -36,14 +38,27 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
     mapping(string => bool) source_name_set;
     mapping(uint => DataSource) private data_sources;
 
+    // address count
+    mapping(address => uint) private addrElementsCnt;
+
+    constructor() public {
+        context.version = 0;
+        context.allowedDislike = false;
+        context.maxLenOfDescription = 200;
+        context.minLenOfDescription = 1;
+        context.maxLenOfName = 50;
+        context.minLenOfName = 1;
+        context.addressDataElementsUpper = 500;
+    }
+
     modifier validateNameLength(string name) {
-        uint length = Strings.utfStringLength(name);
+        uint length = bytes(name).length;
         require(length <= context.maxLenOfDescription && length >= context.minLenOfName,
             "Length of name is not in the range");
         _;
     }
     modifier validateDescLength(string desc) {
-        uint length = Strings.utfStringLength(desc);
+        uint length = bytes(desc).length;
         require(length <= context.maxLenOfDescription && length >= context.minLenOfDescription,
             "Length of desc is not in the range");
         _;
@@ -61,6 +76,10 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
         require(!data_sources[id].deleted, "Data source have been deleted");
         _;
     }
+    modifier elementsCntLessThanUpper() {
+        require(addrElementsCnt[msg.sender] < context.addressDataElementsUpper, "You have created too many elements");
+        _;
+    }
 
     function _nextDataSourceSeq() private returns (uint) {
         data_source_seq += 1;
@@ -69,8 +88,12 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
 
     function createDataSource(string name, string desc, string version, string url) external 
         onlyEnabled onlyController validateNameLength(name) validateDescLength(desc)
-        onlyNotExistsName(name) returns (uint) {
+        onlyNotExistsName(name) elementsCntLessThanUpper returns (uint) {
         // TODO validate data source by DataSourceValidator
+        return _createDataSource(name, desc, version, url);
+    }
+
+    function _createDataSource(string name, string desc, string version, string url) private returns (uint) {
         uint id = _nextDataSourceSeq();
         data_sources[id] = DataSource({
             id: id,
@@ -82,6 +105,7 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
             disabled: false,
             deleted: false
         });
+        addrElementsCnt[msg.sender] ++;
         emit CreateDataSourceEvent(id, msg.sender, name, desc, version, url);
         return id;
     }
@@ -99,28 +123,36 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
         delete source_name_set[data_sources[id].name];
         data_sources[id].name = name;
         source_name_set[data_sources[id].name] = true;
-        emit UpdateDataSourceEvent(id, name, data_sources[id].desc, data_sources[id].version, data_sources[id].url);
+        _updateDataSource(data_sources[id]);
         return id;
+    }
+
+    function _updateDataSource(DataSource ds) private {
+        data_sources[ds.id].name = ds.name;
+        data_sources[ds.id].desc = ds.desc;
+        data_sources[ds.id].version = ds.version;
+        data_sources[ds.id].url = ds.url;
+        emit UpdateDataSourceEvent(ds.id, ds.name, ds.desc, ds.version, ds.url);
     }
 
     function updateDescOfDataSource(uint id, string desc) onlyEnabled onlyController validateDescLength(desc)
         onlyDataSourceExists(id) onlyDataSourceOwner(id) external returns (uint) {
         data_sources[id].desc = desc;
-        emit UpdateDataSourceEvent(id, data_sources[id].name, desc, data_sources[id].version, data_sources[id].url);
+        _updateDataSource(data_sources[id]);
         return id;
     }
 
     function updateVersionOfDataSource(uint id, string version) onlyEnabled onlyController
         onlyDataSourceExists(id) onlyDataSourceOwner(id) external returns (uint) {
         data_sources[id].version = version;
-        emit UpdateDataSourceEvent(id, data_sources[id].name, data_sources[id].desc, version, data_sources[id].url);
+        _updateDataSource(data_sources[id]);
         return id;
     }
 
     function updateURLOfDataSource(uint id, string url) onlyEnabled onlyController
         onlyDataSourceExists(id) onlyDataSourceOwner(id) external returns (uint) {
         data_sources[id].url = url;
-        emit UpdateDataSourceEvent(id, data_sources[id].name, data_sources[id].desc, data_sources[id].version, url);
+        _updateDataSource(data_sources[id]);
         return id;
     }
 
@@ -170,12 +202,22 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
     function likeDataSource(uint source_id) onlyEnabled onlyController onlyDataSourceExists(source_id) external {
         require(!data_sources[source_id].liked[msg.sender], "You have liked this data source");
         require(!data_sources[source_id].disliked[msg.sender], "You have disliked this data source");
-        data_sources[source_id].liked[msg.sender] = true;
+        _likeDataSource(source_id, true);
     }
 
     function cancelLikeDataSource(uint source_id) onlyEnabled onlyController onlyDataSourceExists(source_id) external {
         require(data_sources[source_id].liked[msg.sender], "You do not like this data source");
-        delete data_sources[source_id].liked[msg.sender];
+        _likeDataSource(source_id, false);
+    }
+
+    function _likeDataSource(uint source_id, bool liked) private {
+        if (liked) {
+            data_sources[source_id].liked[msg.sender] = true;
+            emit LikeDataSourceEvent(msg.sender, source_id);
+        } else {
+            delete data_sources[source_id].liked[msg.sender];
+            emit CancelLikeDataSourceEvent(msg.sender, source_id);
+        }
     }
 
     function likeDataChart(uint chart_id) external {
@@ -193,12 +235,22 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
     function dislikeDataSource(uint source_id) onlyEnabled onlyController onlyDataSourceExists(source_id) external {
         require(!data_sources[source_id].liked[msg.sender], "You have liked this data source");
         require(!data_sources[source_id].disliked[msg.sender], "You have disliked this data source");
-        data_sources[source_id].disliked[msg.sender] = true;
+        _dislikeDataSource(source_id, true);
     }
 
     function cancelDislikeDataSource(uint source_id) onlyEnabled onlyController onlyDataSourceExists(source_id) external {
         require(data_sources[source_id].disliked[msg.sender], "You do not dislike this data source");
-        delete data_sources[source_id].liked[msg.sender];
+        _dislikeDataSource(source_id, false);
+    }
+
+    function _dislikeDataSource(uint source_id, bool disliked) private {
+        if (disliked) {
+            data_sources[source_id].disliked[msg.sender] = true;
+            emit DislikeDataSourceEvent(msg.sender, source_id);
+        } else {
+            delete data_sources[source_id].disliked[msg.sender];
+            emit CancelDislikeDataSourceEvent(msg.sender, source_id);
+        }
     }
 
     function dislikeDataChart(uint chart_id) external {
@@ -213,13 +265,13 @@ contract DataManager is IDataManager, IDataAdminManager, Enable, IVersion, Contr
     function cancelDislikeDataDataboard(uint dashboard_id) external {
     }
 
-    function registerDashSourceValidator(uint version, address contract_address) external {
-    }
+    // Admin interface
 
-    function registerDashChartValidator(uint version, address contract_address) external {
-    }
 
-    function registerDashDashboardValidator(uint version, address contract_address) external {
+    // Version interface
+
+    function version() public view returns (uint) {
+        return context.version;
     }
 
 }

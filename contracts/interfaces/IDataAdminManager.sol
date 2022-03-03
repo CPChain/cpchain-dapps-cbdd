@@ -33,6 +33,24 @@ interface IDataAdminManager {
     event DisableDataDashboardEvent(uint dashboard_id);
 
     /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDashSourceValidatorEvent(uint version, address contract_addr);
+
+    /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDashChartValidatorEvent(uint version, address contract_addr);
+
+    /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDashDashboardValidatorEvent(uint version, address contract_addr);
+
+    /**
      * Allowed user dislike a data element
      * @param allowed allowed
      */
@@ -103,4 +121,29 @@ interface IDataAdminManager {
      * @param id ID
      */
     function disableDataDashboard(uint id) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDashSourceValidator}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDashSourceValidator(uint version, address contract_address) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDashChartValidator}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDashChartValidator(uint version, address contract_address) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDashDashboardValidator}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDashDashboardValidator(uint version, address contract_address) external;
+
 }
