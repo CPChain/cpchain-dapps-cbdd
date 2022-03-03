@@ -5,5 +5,5 @@ interface IVersion {
     /**
      * @return version
      */
-    function version() external view returns (string);
+    function version() external view returns (uint);
 }
