@@ -81,16 +81,25 @@ contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimab
     }
     
     // Mint CBDD by controller contract (only can be called by controller contract)
-    function actionYield(address recipient, uint action_id) external onlyController onlyEnabled returns (uint256) {
+    function actionYield(address recipient1, address recipient2, uint action_id) external onlyController onlyEnabled returns (uint256) {
+        uint256 reward = 0;
         if(action_rewards[action_id].reward > 0) {
             // 行为需奖励
-            if (recipient != address(0x0)) {
+            if (recipient1 != address(0x0)) {
                 action_rewards[action_id].current_reward_times += 1;
                 action_rewards[action_id].current_rewards += action_rewards[action_id].reward;
-                _mint(recipient, action_rewards[action_id].reward);
+                reward += action_rewards[action_id].reward;
+                _mint(recipient1, action_rewards[action_id].reward);
             }
+            // 如果是双边，则奖励一下 recipient2，此时，奖励次数不加 1
+            if (getType(action_id) == uint(Actions.Type.BILATERAL) && recipient2 != address(0x0)) {
+                action_rewards[action_id].current_rewards += action_rewards[action_id].reward;
+                reward += action_rewards[action_id].reward;
+                _mint(recipient2, action_rewards[action_id].reward);
+            }
+            emit ActionYieldEvent(recipient1, recipient2, action_id, action_rewards[action_id].reward);
         }
-        return 0;
+        return reward;
     }
 
     function setActionReward(uint action_id, uint256 reward) external onlyOwner onlyEnabled {
