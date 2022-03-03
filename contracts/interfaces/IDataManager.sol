@@ -1,33 +1,6 @@
 pragma solidity ^0.4.24;
 
 interface IDataManager {
-    /**
-     * Triggered when user create a new data source
-     * @param source_id source ID
-     * @param sender address
-     * @param name unique name
-     * @param desc description
-     * @param version version
-     * @param url unique url
-     */
-    event CreateDataSourceEvent(uint source_id, address sender, string name, string desc,
-        string version, string url);
-    
-    /**
-     * Triggered when user update a data source
-     * @param source_id source ID
-     * @param name unique name
-     * @param desc description
-     * @param version version
-     * @param url unique url
-     */
-    event UpdateDataSourceEvent(uint source_id, string name, string desc, string version, string url);
-
-    /**
-     * Triggered when user delete a data source
-     * @param source_id source ID
-     */
-    event DeleteDataSourceEvent(uint source_id);
 
     /**
      * Triggered when user create a new data chart
@@ -91,18 +64,6 @@ interface IDataManager {
 
     /**
      * @param sender sender
-     * @param source_id source ID
-     */
-    event LikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event CancelLikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
      * @param chart_id chart ID
      */
     event LikeDataChartEvent(address sender, uint chart_id);
@@ -124,18 +85,6 @@ interface IDataManager {
      * @param dashboard_id dashboard ID
      */
     event CancelLikeDataDashboardEvent(address sender, uint dashboard_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event DislikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event CancelDislikeDataSourceEvent(address sender, uint source_id);
 
     /**
      * @param sender sender
@@ -162,17 +111,6 @@ interface IDataManager {
     event CancelDislikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
-     * Create data source
-     * Emits {CreateDataSourceEvent}
-     * @param name unique name
-     * @param desc description
-     * @param version version
-     * @param url unique url
-     * @return sequence ID
-     */
-    function createDataSource(string name, string desc, string version, string url) external returns (uint);
-
-    /**
      * Create data chart
      * Emits {CreateDataChartEvent}
      * @param name unique name
@@ -194,50 +132,6 @@ interface IDataManager {
      * @return sequence ID
      */
     function createDataDashboard(string name, uint[] charts, string desc, string data) external returns (uint);
-
-    /**
-     * Update name
-     * Emits {UpdateDataSourceEvent}
-     * @param id ID
-     * @param name name
-     * @return ID
-     */
-    function updateNameOfDataSource(uint id, string name) external returns (uint);
-
-    /**
-     * Update description
-     * Emits {UpdateDataSourceEvent}
-     * @param id ID
-     * @param desc description
-     * @return ID
-     */
-    function updateDescOfDataSource(uint id, string desc) external returns (uint);
-
-    /**
-     * Update version
-     * Emits {UpdateDataSourceEvent}
-     * @param id ID
-     * @param version version
-     * @return ID
-     */
-    function updateVersionOfDataSource(uint id, string version) external returns (uint);
-
-    /**
-     * Update url
-     * Emits {UpdateDataSourceEvent}
-     * @param id ID
-     * @param url URL
-     * @return ID
-     */
-    function updateURLOfDataSource(uint id, string url) external returns (uint);
-
-    /**
-     * Delete data source
-     * Emits {DeleteDataSourceEvent}
-     * @param id ID
-     * @return ID
-     */
-    function deleteDataSource(uint id) external returns (uint);
 
     /**
      * Update name
@@ -321,20 +215,6 @@ interface IDataManager {
     function updateDataOfDataDashboard(uint id, string data) external returns (uint);
 
     /**
-     * Like a data source
-     * Emits {LikeDataSource}
-     * @param source_id source ID
-     */
-    function likeDataSource(uint source_id) external;
-
-    /**
-     * Cancel like a data source
-     * Emits {CancelLikeDataSource}
-     * @param source_id source ID
-     */
-    function cancelLikeDataSource(uint source_id) external;
-
-    /**
      * Like a data chart
      * Emits {LikeDataChart}
      * @param chart_id chart ID
@@ -361,20 +241,6 @@ interface IDataManager {
      * @param dashboard_id dashboard ID
      */
     function cancelLikeDataDataboard(uint dashboard_id) external;
-
-    /**
-     * Dislike a data source
-     * Emits {DislikeDataSource}
-     * @param source_id source ID
-     */
-    function dislikeDataSource(uint source_id) external;
-
-    /**
-     * Cancel dislike a data source
-     * Emits {CancelDislikeDataSource}
-     * @param source_id source ID
-     */
-    function cancelDislikeDataSource(uint source_id) external;
 
     /**
      * Dislike a data chart
