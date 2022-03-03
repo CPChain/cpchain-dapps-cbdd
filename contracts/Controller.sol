@@ -8,7 +8,7 @@ import "./interfaces/IControllerIniter.sol";
 import "./interfaces/IActionYieldFarming.sol";
 import "./lib/Actions.sol";
 
-contract Controller is Claimable, Enable {
+contract Controller is Claimable, Enable, IController {
     enum CONTRACTS {
         ADDRESS_VALIDATOR,
         DATA_MANAGER,
@@ -56,26 +56,35 @@ contract Controller is Claimable, Enable {
         // set instances
         if (code == CONTRACTS.CBDD_TOKEN) {
             cbdd = IActionYieldFarming(addr);
+            emit RegisterCBDDToken(my_contracts[uint(code)].version, addr);
         }
     }
 
-    // function registerAddressValidator(uint version, address contract_address) external {
-    // }
+    function registerAddressValidator(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+    }
 
-    // function registerDataManager(uint version, address contract_address) external {
-    // }
+    function registerDataManager(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+    }
 
-    // function registerTagManager(uint version, address contract_address) external {
-    // }
+    function registerTagManager(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+    }
 
-    // function registerCommentManager(uint version, address contract_address) external {
-    // }
+    function registerCommentManager(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+    }
 
-    // function registerCBDDToken(uint version, address contract_address) external {
-    //     IVersion versionInstance = IVersion(contract_address);
-    //     require(version == versionInstance.version(), "The version of the address is different from the one passed in");
-    //     _setContract(CONTRACTS.CBDD_TOKEN, contract_address);
-    // }
+    function registerCBDDToken(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+        _setContract(CONTRACTS.CBDD_TOKEN, contract_address);
+    }
 
     function yieldTest(address recipient) external initedCBDD onlyEnabled onlyOwner {
         cbdd.actionYield(recipient, address(0x0), uint(Actions.Action.CREATE_DATA_SOURCE));
