@@ -6,21 +6,9 @@ import "./interfaces/IDataSourceManager.sol";
 import "./interfaces/IDataAdminManager.sol";
 import "./interfaces/IVersion.sol";
 import "./lib/ControllerIniter.sol";
-import "./lib/Strings.sol";
+import "./lib/DataBaseManager.sol";
 
-contract DataManager is Enable, IVersion, ControllerIniter, IDataSourceManager {
-    // context
-    struct Context {
-        uint version;
-        bool allowedDislike;
-        uint maxLenOfName;
-        uint minLenOfName;
-        uint maxLenOfDescription;
-        uint minLenOfDescription;
-        uint addressDataElementsUpper;
-    }
-    Context private context;
-
+contract DataSourceManager is DataBaseManager, IDataSourceManager {
     // data source
     struct DataSource {
         uint id;
@@ -38,31 +26,6 @@ contract DataManager is Enable, IVersion, ControllerIniter, IDataSourceManager {
     mapping(string => bool) source_name_set;
     mapping(uint => DataSource) private data_sources;
 
-    // address count
-    mapping(address => uint) private addrElementsCnt;
-
-    constructor() public {
-        context.version = 0;
-        context.allowedDislike = false;
-        context.maxLenOfDescription = 200;
-        context.minLenOfDescription = 1;
-        context.maxLenOfName = 50;
-        context.minLenOfName = 1;
-        context.addressDataElementsUpper = 500;
-    }
-
-    modifier validateNameLength(string name) {
-        uint length = bytes(name).length;
-        require(length <= context.maxLenOfDescription && length >= context.minLenOfName,
-            "Length of name is not in the range");
-        _;
-    }
-    modifier validateDescLength(string desc) {
-        uint length = bytes(desc).length;
-        require(length <= context.maxLenOfDescription && length >= context.minLenOfDescription,
-            "Length of desc is not in the range");
-        _;
-    }
     modifier onlyNotExistsName(string name) {
         require(!source_name_set[name], "Name of data source have been exists!");
         _;
@@ -74,10 +37,6 @@ contract DataManager is Enable, IVersion, ControllerIniter, IDataSourceManager {
     modifier onlyDataSourceExists(uint id) {
         require(data_sources[id].id > 0, "Data source does not exists!");
         require(!data_sources[id].deleted, "Data source have been deleted");
-        _;
-    }
-    modifier elementsCntLessThanUpper(address sender) {
-        require(addrElementsCnt[sender] < context.addressDataElementsUpper, "You have created too many elements");
         _;
     }
 
@@ -155,13 +114,5 @@ contract DataManager is Enable, IVersion, ControllerIniter, IDataSourceManager {
         }
     }
 
-    // Admin interface
-
-
-    // Version interface
-
-    function version() public view returns (uint) {
-        return context.version;
-    }
-
+    // Called by owner
 }

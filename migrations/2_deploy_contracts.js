@@ -1,7 +1,7 @@
 // Deploy Cpchain-dapps-cbdd
 var cbdd = artifacts.require("./CBDD.sol");
 var controller = artifacts.require('./Controller.sol')
-var dataManager = artifacts.require('./DataManager.sol')
+var dataSourceManager = artifacts.require('./DataSourceManager.sol')
 
 module.exports = function(deployer) {
     deployer.deploy(cbdd).then(async ()=>{
@@ -9,9 +9,9 @@ module.exports = function(deployer) {
         const cbddIns = await cbdd.deployed()
 
         // deploy DataManager contract
-        const dataManagerIns = await deployer.deploy(dataManager)
+        const dataSourceManagerIns = await deployer.deploy(dataSourceManager)
 
         // deploy controller
-        await deployer.deploy(controller, cbddIns.address, dataManagerIns.address);
+        await deployer.deploy(controller, cbddIns.address, dataSourceManagerIns.address);
     });
 };

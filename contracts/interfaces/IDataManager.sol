@@ -111,6 +111,54 @@ interface IDataManager {
     event CancelDislikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
+     * @param source_id source ID
+     */
+    event EnableDataSourceEvent(uint source_id);
+
+    /**
+     * @param source_id source ID
+     */
+    event DisableDataSourceEvent(uint source_id);
+
+    /**
+     * @param chart_id chart ID
+     */
+    event EnableDataChartEvent(uint chart_id);
+
+    /**
+     * @param chart_id chart ID
+     */
+    event DisableDataChartEvent(uint chart_id);
+
+    /**
+     * @param dashboard_id dashboard ID
+     */
+    event EnableDataDashboardEvent(uint dashboard_id);
+
+    /**
+     * @param dashboard_id dashboard ID
+     */
+    event DisableDataDashboardEvent(uint dashboard_id);
+
+    /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDataSourceValidatorEvent(uint version, address contract_addr);
+
+    /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDataChartValidatorEvent(uint version, address contract_addr);
+
+    /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDataDashboardValidatorEvent(uint version, address contract_addr);
+
+    /**
      * Create data chart
      * Emits {CreateDataChartEvent}
      * @param name unique name
@@ -269,4 +317,70 @@ interface IDataManager {
      * @param dashboard_id dashboard ID
      */
     function cancelDislikeDataDataboard(uint dashboard_id) external;
+
+    /**
+     * Enable a data source
+     * Emits {EnableDataSourceEvent}
+     * @param id ID
+     */
+    function enableDataSource(uint id) external;
+
+    /**
+     * Disable a data source
+     * Emits {DisableDataSourceEvent}
+     * @param id ID
+     */
+    function disableDataSource(uint id) external;
+
+    /**
+     * Enable a data chart
+     * Emits {EnableDataChartEvent}
+     * @param id ID
+     */
+    function enableDataChart(uint id) external;
+
+    /**
+     * Disable a data chart
+     * Emits {DisableDataChartEvent}
+     * @param id ID
+     */
+    function disableDataChart(uint id) external;
+
+    /**
+     * Enable a data dashboard
+     * Emits {EnableDataDashboardEvent}
+     * @param id ID
+     */
+    function enableDataDashboard(uint id) external;
+
+    /**
+     * Disable a data dashboard
+     * Emits {DisableDataDashboardEvent}
+     * @param id ID
+     */
+    function disableDataDashboard(uint id) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDataSourceValidator}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDataSourceValidator(uint version, address contract_address) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDataChartValidatorEvent}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDataChartValidator(uint version, address contract_address) external;
+
+    /**
+     * Register the validator contract address
+     * Emits {RegisterDataDashboardValidatorEvent}
+     * @param version version
+     * @param contract_address contract address
+     */
+    function registerDataDashboardValidator(uint version, address contract_address) external;
 }

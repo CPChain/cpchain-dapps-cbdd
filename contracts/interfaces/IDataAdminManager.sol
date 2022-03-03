@@ -1,55 +1,6 @@
 pragma solidity ^0.4.24;
 
 interface IDataAdminManager {
-
-    /**
-     * @param source_id source ID
-     */
-    event EnableDataSourceEvent(uint source_id);
-
-    /**
-     * @param source_id source ID
-     */
-    event DisableDataSourceEvent(uint source_id);
-
-    /**
-     * @param chart_id chart ID
-     */
-    event EnableDataChartEvent(uint chart_id);
-
-    /**
-     * @param chart_id chart ID
-     */
-    event DisableDataChartEvent(uint chart_id);
-
-    /**
-     * @param dashboard_id dashboard ID
-     */
-    event EnableDataDashboardEvent(uint dashboard_id);
-
-    /**
-     * @param dashboard_id dashboard ID
-     */
-    event DisableDataDashboardEvent(uint dashboard_id);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashSourceValidatorEvent(uint version, address contract_addr);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashChartValidatorEvent(uint version, address contract_addr);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDashDashboardValidatorEvent(uint version, address contract_addr);
-
     /**
      * Allowed user dislike a data element
      * @param allowed allowed
@@ -81,69 +32,8 @@ interface IDataAdminManager {
     function setMaxLengthOfDescription(uint length) external;
 
     /**
-     * Enable a data source
-     * Emits {EnableDataSourceEvent}
-     * @param id ID
+     * Set the min length of the description
+     * @param length length
      */
-    function enableDataSource(uint id) external;
-
-    /**
-     * Disable a data source
-     * Emits {DisableDataSourceEvent}
-     * @param id ID
-     */
-    function disableDataSource(uint id) external;
-
-    /**
-     * Enable a data chart
-     * Emits {EnableDataChartEvent}
-     * @param id ID
-     */
-    function enableDataChart(uint id) external;
-
-    /**
-     * Disable a data chart
-     * Emits {DisableDataChartEvent}
-     * @param id ID
-     */
-    function disableDataChart(uint id) external;
-
-    /**
-     * Enable a data dashboard
-     * Emits {EnableDataDashboardEvent}
-     * @param id ID
-     */
-    function enableDataDashboard(uint id) external;
-
-    /**
-     * Disable a data dashboard
-     * Emits {DisableDataDashboardEvent}
-     * @param id ID
-     */
-    function disableDataDashboard(uint id) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashSourceValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashSourceValidator(uint version, address contract_address) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashChartValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashChartValidator(uint version, address contract_address) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDashDashboardValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDashDashboardValidator(uint version, address contract_address) external;
-
+    function setMinLengthOfDescription(uint length) external;
 }

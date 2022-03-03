@@ -32,9 +32,9 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
     }
     mapping(uint => MyContract) private my_contracts;
 
-    constructor(address cbdd_addr, address data_manager_addr) public {
-        _setContract(CONTRACTS.CBDD_TOKEN, cbdd_addr);
-        _setContract(CONTRACTS.DATA_SOURCE_MANAGER, data_manager_addr);
+    constructor(address cbddAddr, address dataSourceManagerAddr) public {
+        _setContract(CONTRACTS.CBDD_TOKEN, cbddAddr);
+        _setContract(CONTRACTS.DATA_SOURCE_MANAGER, dataSourceManagerAddr);
     }
 
     modifier initedCBDD() {require(my_contracts[uint(CONTRACTS.CBDD_TOKEN)].addr != address(0x0)); _;}
