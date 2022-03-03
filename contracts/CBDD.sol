@@ -6,8 +6,9 @@ import "./lib/MyERC20.sol";
 import "./interfaces/IActionYieldFarming.sol";
 import "./interfaces/IActionYieldFarmingAdmin.sol";
 import "./lib/Actions.sol";
+import "./lib/ControllerIniter.sol";
 
-contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable {
+contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable, ControllerIniter {
 
     struct ActionReward {
         Actions.Action action;
@@ -80,7 +81,7 @@ contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimab
     }
     
     // Mint CBDD by controller contract (only can be called by controller contract)
-    function actionYield(address recipient, uint action_id) external returns (uint256) {
+    function actionYield(address recipient, uint action_id) external onlyController onlyEnabled returns (uint256) {
         if(action_rewards[action_id].reward > 0) {
             // 行为需奖励
             if (recipient != address(0x0)) {
