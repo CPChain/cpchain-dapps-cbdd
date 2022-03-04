@@ -30,30 +30,6 @@ interface IDataSourceManager {
     event DeleteDataSourceEvent(uint source_id);
 
     /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event LikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event CancelLikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event DislikeDataSourceEvent(address sender, uint source_id);
-
-    /**
-     * @param sender sender
-     * @param source_id source ID
-     */
-    event CancelDislikeDataSourceEvent(address sender, uint source_id);
-
-    /**
      * @param version version
      * @param contract_addr contract address
      */
@@ -96,7 +72,7 @@ interface IDataSourceManager {
      * liked 为 false 时，是 dislike；
      * 如果当前为 like，那么 liked 为 false 时，是 cancel-like；否则报错
      * 如果当前为 dislike，那么 liked 为 true 时，是 cancel-dislike；否则报错
-     * Emits {LikeDataSource, CancelLikeDataSource, DislikeDataSource, CancelDislikeDataSource}
+     * Emits {LikeEvent, CancelLike, Dislike, CancelDislike}
      * @param source_id source ID
      */
     function likeDataSource(address sender, uint source_id, bool liked) external;

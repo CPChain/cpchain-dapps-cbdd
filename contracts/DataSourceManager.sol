@@ -17,7 +17,6 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
 
     function createDataSource(address sender, string name, string desc, string version, string url) external 
         onlyEnabled onlyController returns (uint) {
-        // TODO validate data source by DataSourceValidator
         return _createDataSource(sender, name, desc, version, url);
     }
 
@@ -64,6 +63,4 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
         version = data_sources[id].version;
         url = data_sources[id].url;
     }
-
-    // TODO Called by owner
 }

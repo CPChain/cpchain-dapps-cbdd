@@ -26,6 +26,16 @@ interface IDataBaseManager {
     event CancelDislikeEvent(address sender, uint id);
 
     /**
+     * @param id source ID
+     */
+    event EnableDataElementEvent(uint id);
+
+    /**
+     * @param id source ID
+     */
+    event DisableDataElementEvent(uint id);
+
+    /**
      * Allowed user dislike a data element
      * @param allowed allowed
      */
@@ -78,7 +88,23 @@ interface IDataBaseManager {
 
     function isDisliked(uint id, address sender) external view returns (bool);
 
-    function getDataSourceOwner(uint id) external view returns (address);
+    function getDataElementOwner(uint id) external view returns (address);
 
     function getDataElement(uint id) external view returns (uint source_id, address sender, string name, string desc);
+
+    /**
+     * Enable a data source
+     * Emits {EnableDataElementEvent}
+     * @param id ID
+     */
+    function enableDataElement(uint id) external;
+
+    /**
+     * Disable a data source
+     * Emits {DisableDataElementEvent}
+     * @param id ID
+     */
+    function disableDataElement(uint id) external;
+
+    function isDisabled(uint id) external view returns (bool);
 }

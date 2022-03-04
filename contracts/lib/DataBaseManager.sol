@@ -61,6 +61,10 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
         require(!_elements[id].deleted, "Data element have been deleted");
         _;
     }
+    modifier onlyDataElementEnabled(uint id) {
+        require(!_elements[id].disabled, "Data element is diabled now");
+        _;
+    }
 
     function version() public view returns (uint) {
         return context.version;
@@ -105,7 +109,7 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
     }
 
     function _updateElement(address sender, uint id, string name, string desc) internal
-        validateNameLength(name) validateDescLength(desc)
+        validateNameLength(name) validateDescLength(desc) onlyDataElementEnabled(id)
         onlyDataElementOwner(sender, id) onlyDataElementExists(id) {
         delete _name_set[_elements[id].name];
         _name_set[name] = true;
@@ -114,12 +118,12 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
     }
 
     function _deleteElement(address sender, uint id) onlyDataElementExists(id)
-        onlyDataElementOwner(sender, id) internal {
+        onlyDataElementOwner(sender, id) onlyDataElementEnabled(id) internal {
         _elements[id].deleted = true;
         delete _name_set[_elements[id].name];
     }
 
-    function _likeElement(address sender, uint id, bool liked) internal onlyDataElementExists(id) {
+    function _likeElement(address sender, uint id, bool liked) internal onlyDataElementExists(id) onlyDataElementEnabled(id) {
         if (!_elements[id].liked[sender] && !_elements[id].disliked[sender]) {
             if (liked) {
                 _elements[id].liked[sender] = true;
@@ -138,6 +142,16 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
             _elements[id].disliked[sender] = false;
             emit CancelDislikeEvent(sender, id);
         }
+    }
+
+    function enableDataElement(uint id) external onlyEnabled onlyOwner onlyDataElementExists(id) {
+        _elements[id].disabled = false;
+        emit EnableDataElementEvent(id);
+    }
+
+    function disableDataElement(uint id) external onlyEnabled onlyOwner onlyDataElementExists(id) {
+        _elements[id].disabled = true;
+        emit DisableDataElementEvent(id);
     }
 
     function setIfAllowedDislike(bool allowed) external onlyEnabled onlyOwner {
@@ -208,5 +222,9 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
         sender = _elements[id].owner;
         name = _elements[id].name;
         desc = _elements[id].desc;
+    }
+
+    function isDisabled(uint id) external view returns (bool) {
+        return _elements[id].disabled;
     }
 }

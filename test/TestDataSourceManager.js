@@ -157,4 +157,13 @@ contract("controller", (accounts) => {
         assert.equal(lenOfDesc.min, 3)
         assert.equal(lenOfDesc.max, 56)
     })
+    it("Enable and disable", async ()=> {
+        const dataSource = await dataSourceContract.deployed()
+
+        assert.equal(await dataSource.isDisabled(2), false)
+        await dataSource.disableDataElement(2)
+        assert.equal(await dataSource.isDisabled(2), true)
+        await dataSource.enableDataElement(2)
+        assert.equal(await dataSource.isDisabled(2), false)
+    })
 })
