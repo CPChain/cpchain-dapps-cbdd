@@ -21,7 +21,6 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
         mapping(address => bool) liked;
         mapping(address => bool) disliked;
     }
-    uint private data_source_seq = 0;
     mapping(string => bool) source_name_set;
     mapping(uint => DataSource) private data_sources;
 
@@ -39,11 +38,6 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
         _;
     }
 
-    function _nextDataSourceSeq() private returns (uint) {
-        data_source_seq += 1;
-        return data_source_seq;
-    }
-
     function createDataSource(address sender, string name, string desc, string version, string url) external 
         onlyEnabled onlyController returns (uint) {
         // TODO validate data source by DataSourceValidator
@@ -52,7 +46,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
 
     function _createDataSource(address sender, string name, string desc, string version, string url) private validateNameLength(name) validateDescLength(desc)
         onlyNotExistsName(name) elementsCntLessThanUpper(sender) returns (uint) {
-        uint id = _nextDataSourceSeq();
+        uint id = _nextSeq();
         data_sources[id] = DataSource({
             id: id,
             owner: sender,

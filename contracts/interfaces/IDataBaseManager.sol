@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-interface IDataAdminManager {
+interface IDataBaseManager {
     /**
      * Allowed user dislike a data element
      * @param allowed allowed
@@ -36,4 +36,12 @@ interface IDataAdminManager {
      * @param length length
      */
     function setMinLengthOfDescription(uint length) external;
+
+    function getIfAllowedDislike() external view returns (bool);
+
+    function getUpperElementsPerAddress() external view returns (uint);
+
+    function getLengthOfName() external view returns (uint min, uint max);
+
+    function getLengthOfDesc() external view returns (uint min, uint max);
 }

@@ -2,12 +2,12 @@ pragma solidity ^0.4.24;
 
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
-import "../interfaces/IDataAdminManager.sol";
+import "../interfaces/IDataBaseManager.sol";
 import "../interfaces/IVersion.sol";
 import "./ControllerIniter.sol";
 
 
-contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManager {
+contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager {
     // context
     struct Context {
         uint version;
@@ -17,6 +17,7 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManage
         uint maxLenOfDescription;
         uint minLenOfDescription;
         uint addressDataElementsUpper;
+        uint seq;
     }
     Context internal context;
 
@@ -31,6 +32,7 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManage
         context.maxLenOfName = 50;
         context.minLenOfName = 1;
         context.addressDataElementsUpper = 500;
+        context.seq = 0;
     }
 
     function version() public view returns (uint) {
@@ -54,6 +56,11 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManage
         _;
     }
 
+    function _nextSeq() internal returns (uint) {
+        context.seq += 1;
+        return context.seq;
+    }
+
     function setIfAllowedDislike(bool allowed) external onlyEnabled onlyOwner {
         context.allowedDislike = allowed;
     }
@@ -74,7 +81,25 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManage
         context.maxLenOfDescription = length;
     }
 
-    function setMinLengthOfDescription(uint length) external {
+    function setMinLengthOfDescription(uint length) external onlyEnabled onlyOwner {
         context.minLenOfDescription = length;
+    }
+
+    function getIfAllowedDislike() external view returns (bool) {
+        return context.allowedDislike;
+    }
+
+    function getUpperElementsPerAddress() external view returns (uint) {
+        return context.addressDataElementsUpper;
+    }
+
+    function getLengthOfName() external view returns (uint min, uint max) {
+        min = context.minLenOfName;
+        max = context.maxLenOfName;
+    }
+
+    function getLengthOfDesc() external view returns (uint min, uint max) {
+        min = context.minLenOfDescription;
+        max = context.maxLenOfDescription;
     }
 }

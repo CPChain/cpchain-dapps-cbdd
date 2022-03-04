@@ -112,6 +112,7 @@ contract("controller", (accounts) => {
         const controller = await controllerContract.deployed()
         const dataSource = await dataSourceContract.deployed()
 
+        assert.equal(await dataSource.getIfAllowedDislike(), true);
         await dataSource.setIfAllowedDislike(false)
 
         try {
@@ -121,6 +122,7 @@ contract("controller", (accounts) => {
             assert.ok(error.toString().includes("Don't allow dislike data source now"))
         }
 
+        assert.equal(await dataSource.getIfAllowedDislike(), false);
     })
     it("Upper per address", async ()=> {
         const controller = await controllerContract.deployed()
@@ -134,11 +136,25 @@ contract("controller", (accounts) => {
         } catch(error) {
             assert.ok(error.toString().includes("You have created too many elements"))
         }
+
+        assert.equal(await dataSource.getUpperElementsPerAddress(), 3)
     })
     it("Update the length of name", async ()=> {
-        
+        const dataSource = await dataSourceContract.deployed()
+        await dataSource.setMinLengthOfName(2)
+        await dataSource.setMaxLengthOfName(5)
+
+        const lenOfName = await dataSource.getLengthOfName()
+        assert.equal(lenOfName.min, 2)
+        assert.equal(lenOfName.max, 5)
     })
     it("Update the length of description", async ()=> {
+        const dataSource = await dataSourceContract.deployed()
+        await dataSource.setMaxLengthOfDescription(56)
+        await dataSource.setMinLengthOfDescription(3)
 
+        const lenOfDesc = await dataSource.getLengthOfDesc()
+        assert.equal(lenOfDesc.min, 3)
+        assert.equal(lenOfDesc.max, 56)
     })
 })
