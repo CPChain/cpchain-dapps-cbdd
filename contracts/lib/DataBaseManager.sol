@@ -25,7 +25,7 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataAdminManage
 
     constructor() public {
         context.version = 0;
-        context.allowedDislike = false;
+        context.allowedDislike = true;
         context.maxLenOfDescription = 200;
         context.minLenOfDescription = 1;
         context.maxLenOfName = 50;

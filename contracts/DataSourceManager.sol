@@ -3,7 +3,6 @@ pragma solidity ^0.4.24;
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
 import "./interfaces/IDataSourceManager.sol";
-import "./interfaces/IDataAdminManager.sol";
 import "./interfaces/IVersion.sol";
 import "./lib/ControllerIniter.sol";
 import "./lib/DataBaseManager.sol";
@@ -103,6 +102,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
                 data_sources[source_id].liked[sender] = true;
                 emit LikeDataSourceEvent(sender, source_id);
             } else {
+                require(context.allowedDislike, "Don't allow dislike data source now");
                 data_sources[source_id].disliked[sender] = true;
                 emit DislikeDataSourceEvent(sender, source_id);
             }

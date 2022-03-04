@@ -111,16 +111,6 @@ interface IDataManager {
     event CancelDislikeDataDashboardEvent(address sender, uint dashboard_id);
 
     /**
-     * @param source_id source ID
-     */
-    event EnableDataSourceEvent(uint source_id);
-
-    /**
-     * @param source_id source ID
-     */
-    event DisableDataSourceEvent(uint source_id);
-
-    /**
      * @param chart_id chart ID
      */
     event EnableDataChartEvent(uint chart_id);
@@ -139,12 +129,6 @@ interface IDataManager {
      * @param dashboard_id dashboard ID
      */
     event DisableDataDashboardEvent(uint dashboard_id);
-
-    /**
-     * @param version version
-     * @param contract_addr contract address
-     */
-    event RegisterDataSourceValidatorEvent(uint version, address contract_addr);
 
     /**
      * @param version version
@@ -319,20 +303,6 @@ interface IDataManager {
     function cancelDislikeDataDataboard(uint dashboard_id) external;
 
     /**
-     * Enable a data source
-     * Emits {EnableDataSourceEvent}
-     * @param id ID
-     */
-    function enableDataSource(uint id) external;
-
-    /**
-     * Disable a data source
-     * Emits {DisableDataSourceEvent}
-     * @param id ID
-     */
-    function disableDataSource(uint id) external;
-
-    /**
      * Enable a data chart
      * Emits {EnableDataChartEvent}
      * @param id ID
@@ -359,14 +329,6 @@ interface IDataManager {
      * @param id ID
      */
     function disableDataDashboard(uint id) external;
-
-    /**
-     * Register the validator contract address
-     * Emits {RegisterDataSourceValidator}
-     * @param version version
-     * @param contract_address contract address
-     */
-    function registerDataSourceValidator(uint version, address contract_address) external;
 
     /**
      * Register the validator contract address

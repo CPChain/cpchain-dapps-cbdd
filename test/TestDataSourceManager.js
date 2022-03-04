@@ -108,8 +108,35 @@ contract("controller", (accounts) => {
         assert.equal(await dataSource.existsID(1), false)
         assert.equal(await dataSource.existsName("name1"), false)
     })
-    it("Update the length of name", async ()=> {
+    it("Don't allow dislike data source", async ()=> {
+        const controller = await controllerContract.deployed()
+        const dataSource = await dataSourceContract.deployed()
 
+        await dataSource.setIfAllowedDislike(false)
+
+        try {
+            await controller.likeDataSource(2, false, {from: accounts[2]})
+            assert.fail()
+        } catch(error) {
+            assert.ok(error.toString().includes("Don't allow dislike data source now"))
+        }
+
+    })
+    it("Upper per address", async ()=> {
+        const controller = await controllerContract.deployed()
+        const dataSource = await dataSourceContract.deployed()
+
+        await dataSource.setOneAddressUpperLimitOfDataElements(3)
+        
+        try {
+            await controller.createDataSource("name4", "desc", "0.1", "http://url")
+            assert.fail()
+        } catch(error) {
+            assert.ok(error.toString().includes("You have created too many elements"))
+        }
+    })
+    it("Update the length of name", async ()=> {
+        
     })
     it("Update the length of description", async ()=> {
 
