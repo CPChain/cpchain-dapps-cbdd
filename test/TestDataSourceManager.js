@@ -101,7 +101,7 @@ contract("controller", (accounts) => {
             await controller.deleteDataSource(1, {from: accounts[1]})
             assert.fail()
         } catch(error) {
-            assert.ok(error.toString().includes("Only the owner of this data source can call it"))
+            assert.ok(error.toString().includes("Only the owner of this data element can call it"))
         }
 
         await controller.deleteDataSource(1, {from: accounts[0]})
@@ -119,7 +119,7 @@ contract("controller", (accounts) => {
             await controller.likeDataSource(2, false, {from: accounts[2]})
             assert.fail()
         } catch(error) {
-            assert.ok(error.toString().includes("Don't allow dislike data source now"))
+            assert.ok(error.toString().includes("Don't allow dislike data element now"))
         }
 
         assert.equal(await dataSource.getIfAllowedDislike(), false);

@@ -2,6 +2,30 @@ pragma solidity ^0.4.24;
 
 interface IDataBaseManager {
     /**
+     * @param sender sender
+     * @param id source ID
+     */
+    event LikeEvent(address sender, uint id);
+
+    /**
+     * @param sender sender
+     * @param id source ID
+     */
+    event CancelLikeEvent(address sender, uint id);
+
+    /**
+     * @param sender sender
+     * @param id source ID
+     */
+    event DislikeEvent(address sender, uint id);
+
+    /**
+     * @param sender sender
+     * @param id source ID
+     */
+    event CancelDislikeEvent(address sender, uint id);
+
+    /**
      * Allowed user dislike a data element
      * @param allowed allowed
      */
@@ -44,4 +68,17 @@ interface IDataBaseManager {
     function getLengthOfName() external view returns (uint min, uint max);
 
     function getLengthOfDesc() external view returns (uint min, uint max);
+
+    // views
+    function existsID(uint id) external view returns (bool);
+
+    function existsName(string name) external view returns (bool);
+
+    function isLiked(uint id, address sender) external view returns (bool);
+
+    function isDisliked(uint id, address sender) external view returns (bool);
+
+    function getDataSourceOwner(uint id) external view returns (address);
+
+    function getDataElement(uint id) external view returns (uint source_id, address sender, string name, string desc);
 }
