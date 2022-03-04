@@ -32,6 +32,8 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
     }
     mapping(uint => MyContract) private my_contracts;
 
+    mapping(uint => mapping (address => bool)) private likedDataSource;
+
     constructor(address cbddAddr, address dataSourceManagerAddr) public {
         _setContract(CONTRACTS.CBDD_TOKEN, cbddAddr);
         _setContract(CONTRACTS.DATA_SOURCE_MANAGER, dataSourceManagerAddr);
@@ -121,9 +123,19 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
     }
 
     function likeDataSource(uint source_id, bool liked) external {
-        // TODO 已被奖励过点赞某数据源的地址，取消点赞后再次点赞，双方都不再进行奖励
         dataSourceManager.likeDataSource(msg.sender, source_id, liked);
-        // TODO 给双方进行奖励
+        // 已被奖励过点赞某数据源的地址，取消点赞后以及不喜欢、再次点赞等等，双方都不再进行奖励
+        if (!likedDataSource[source_id][msg.sender]) {
+            // 给双方进行奖励
+            likedDataSource[source_id][msg.sender] = true;
+            address owner = dataSourceManager.getDataSourceOwner(source_id);
+            // 判断是 LIKE 还是 DISLIKE
+            if (liked) {
+                cbdd.actionYield(msg.sender, owner, uint(Actions.Action.LIKE_DATA_SOURCE));
+            } else {
+                cbdd.actionYield(msg.sender, owner, uint(Actions.Action.DISLIKE_DATA_SOURCE));
+            }
+        }
     }
     // Data Source Manager Proxy End
 }

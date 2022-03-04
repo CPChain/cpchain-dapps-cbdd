@@ -65,6 +65,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
             deleted: false
         });
         addrElementsCnt[sender] ++;
+        source_name_set[name] = true;
         emit CreateDataSourceEvent(id, sender, name, desc, version, url);
         return id;
     }
@@ -77,7 +78,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
     function _updateDataSource(address sender, uint id, string name, string desc, string version, string url) private validateNameLength(name) validateDescLength(desc)
         onlyDataSourceOwner(sender, id) onlyDataSourceExists(id) {
         delete source_name_set[data_sources[id].name];
-        source_name_set[data_sources[id].name] = true;
+        source_name_set[name] = true;
         data_sources[id].name = name;
         data_sources[id].desc = desc;
         data_sources[id].version = version;
@@ -88,6 +89,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
     function deleteDataSource(address sender, uint id) onlyEnabled onlyController onlyDataSourceExists(id)
         onlyDataSourceOwner(sender, id) external {
         data_sources[id].deleted = true;
+        delete source_name_set[data_sources[id].name];
         emit DeleteDataSourceEvent(id);
     }
 
@@ -101,7 +103,7 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
                 data_sources[source_id].liked[sender] = true;
                 emit LikeDataSourceEvent(sender, source_id);
             } else {
-                delete data_sources[source_id].liked[sender];
+                data_sources[source_id].disliked[sender] = true;
                 emit DislikeDataSourceEvent(sender, source_id);
             }
         } else if(data_sources[source_id].liked[sender]) {
@@ -110,8 +112,40 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
             emit CancelLikeDataSourceEvent(sender, source_id);
         } else if(data_sources[source_id].disliked[sender]) {
             require(liked, "You have disliked this data source");
+            data_sources[source_id].disliked[sender] = false;
             emit CancelDislikeDataSourceEvent(sender, source_id);
         }
+    }
+
+    // views
+    function existsID(uint id) external view returns (bool) {
+        return data_sources[id].id > 0 && !data_sources[id].deleted;
+    }
+
+    function existsName(string name) external view returns (bool) {
+        return source_name_set[name];
+    }
+
+    function isLiked(uint id, address sender) external view returns (bool) {
+        return data_sources[id].liked[sender];
+    }
+
+    function isDisliked(uint id, address sender) external view returns (bool) {
+        return data_sources[id].disliked[sender];
+    }
+
+    function getDataSourceOwner(uint id) external view returns (address) {
+        return data_sources[id].owner;
+    }
+
+    function getDataSource(uint id) external view returns (uint source_id, address sender, string name, string desc,
+        string version, string url) {
+        source_id = data_sources[id].id;
+        sender = data_sources[id].owner;
+        name = data_sources[id].name;
+        desc = data_sources[id].desc;
+        version = data_sources[id].version;
+        url = data_sources[id].url;
     }
 
     // Called by owner

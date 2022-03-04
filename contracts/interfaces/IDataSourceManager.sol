@@ -54,6 +54,12 @@ interface IDataSourceManager {
     event CancelDislikeDataSourceEvent(address sender, uint source_id);
 
     /**
+     * @param version version
+     * @param contract_addr contract address
+     */
+    event RegisterDataSourceValidatorEvent(uint version, address contract_addr);
+
+    /**
      * Create data source
      * Emits {CreateDataSourceEvent}
      * @param name unique name
@@ -94,4 +100,18 @@ interface IDataSourceManager {
      * @param source_id source ID
      */
     function likeDataSource(address sender, uint source_id, bool liked) external;
+
+    // views
+    function existsID(uint id) external view returns (bool);
+
+    function existsName(string name) external view returns (bool);
+
+    function isLiked(uint id, address sender) external view returns (bool);
+
+    function isDisliked(uint id, address sender) external view returns (bool);
+
+    function getDataSourceOwner(uint id) external view returns (address);
+
+    function getDataSource(uint id) external view returns (uint source_id, address sender, string name, string desc,
+        string version, string url);
 }
