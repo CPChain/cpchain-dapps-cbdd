@@ -2,42 +2,23 @@ pragma solidity ^0.4.24;
 
 interface ICommentManager {
 
-    event AddCommentOfDataSource(uint source_id, uint comment_id, address sender, string comment);
+    event AddComment(uint id, uint dataElementID, address sender, string comment);
 
-    event AddCommentOfDataChart(uint chart_id, uint comment_id, address sender, string comment);
+    event UpdateComment(uint id, string comment);
 
-    event AddCommentOfDataDashboard(uint dashboard_id, uint comment_id, address sender, string comment);
+    event ReplyComment(uint id, uint targetID, address sender, string comment);
 
-    event UpdateComment(uint comment_id, string comment);
+    event DeleteComment(uint id);
 
-    event ReplyComment(uint comment_id, uint reply_comment_id, address sender, string comment);
+    event LikeComment(uint id, address sender, bool liked);
 
-    event DeleteComment(uint comment_id);
+    function addComment(address sender, uint id, string comment) external returns (uint);
 
-    event LikeComment(uint comment_id, address sender);
+    function updateComment(address sender, uint id, string comment) external;
 
-    event CancelLikeComment(uint comment_id, address sender);
+    function deleteComment(address sender, uint id) external;
 
-    event DislikeComment(uint comment_id, address sender);
+    function replyComment(address sender, uint targetID, string comment) external;
 
-    event CanceldislikeComment(uint comment_id, address sender);
-
-    function addCommentOfDataSource(uint, string) external returns (uint);
-
-    function addCommentOfDataChart(uint, string) external returns (uint);
-
-    function addCommentOfDataDashboard(uint, string) external returns (uint);
-
-    function updateComment(uint, string) external;
-
-    function deleteComment(uint) external;
-
-    function replyComment(uint, string) external;
-
-    function likeComment(uint) external;
-
-    function cancelLikeComment(uint) external;
-
-    function cancelDislikeComment(uint) external;
-
+    function likeComment(address sender, uint, bool liked) external;
 }
