@@ -37,7 +37,7 @@ contract DataChartManager is DataBaseManager, IDataChartManager {
             chart_type: chart_type,
             data: data
         });
-        // emit CreateDataChartEvent(id, sender, name, source_id, desc, chart_type, data);
+        emit CreateDataChartEvent(id, sender, name, source_id, desc, chart_type, data);
         return id;
     }
 
@@ -53,12 +53,12 @@ contract DataChartManager is DataBaseManager, IDataChartManager {
         data_charts[id].source_id = source_id;
         data_charts[id].chart_type = chart_type;
         data_charts[id].data = data;
-        // emit UpdateDataChartEvent(id, name, source_id, desc, chart_type, data);
+        emit UpdateDataChartEvent(id, name, source_id, desc, chart_type, data);
     }
 
     function deleteDataChart(address sender, uint id) onlyEnabled onlyController external {
         _deleteElement(sender, id);
-        // emit DeleteDataChartEvent(id);
+        emit DeleteDataChartEvent(id);
     }
 
     function likeDataChart(address sender, uint chart_id, bool liked) onlyEnabled onlyController external {

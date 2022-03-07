@@ -11,6 +11,8 @@ interface IController {
 
     event RegisterDataChartManager(uint version, address contract_addr);
 
+    event RegisterDataDashboardManager(uint version, address contract_addr);
+
     event RegisterTagManager(uint version, address contract_addr);
 
     event RegisterCommentManager(uint version, address contract_addr);
@@ -28,6 +30,8 @@ interface IController {
     function registerDataSourceManager(uint version, address contract_address) external;
 
     function registerDataChartManager(uint version, address contract_address) external;
+
+    function registerDataDashboardManager(uint version, address contract_address) external;
 
     function registerTagManager(uint version, address contract_address) external;
 
