@@ -7,7 +7,9 @@ pragma solidity ^0.4.24;
 interface IController {
     event RegisterAddressValidator(uint version, address contract_addr);
 
-    event RegisterDataManager(uint version, address contract_addr);
+    event RegisterDataSourceManager(uint version, address contract_addr);
+
+    event RegisterDataChartManager(uint version, address contract_addr);
 
     event RegisterTagManager(uint version, address contract_addr);
 
@@ -23,7 +25,9 @@ interface IController {
      */
     function registerAddressValidator(uint version, address contract_address) external;
 
-    function registerDataManager(uint version, address contract_address) external;
+    function registerDataSourceManager(uint version, address contract_address) external;
+
+    function registerDataChartManager(uint version, address contract_address) external;
 
     function registerTagManager(uint version, address contract_address) external;
 

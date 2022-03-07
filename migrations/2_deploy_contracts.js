@@ -16,6 +16,8 @@ module.exports = function(deployer) {
         const dataChartManagerIns = await deployer.deploy(dataChartManager, dataSourceManagerIns.address)
 
         // deploy controller
-        await deployer.deploy(controller, cbddIns.address, dataSourceManagerIns.address);
+        await deployer.deploy(controller, cbddIns.address,
+            dataSourceManagerIns.address,
+            dataChartManagerIns.address);
     });
 };

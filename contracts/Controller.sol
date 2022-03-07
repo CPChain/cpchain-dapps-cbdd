@@ -5,16 +5,19 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
 import "./interfaces/IDataSourceManager.sol";
 import "./interfaces/IDataSourceManagerProxy.sol";
+import "./interfaces/IDataChartManager.sol";
+import "./interfaces/IDataChartManagerProxy.sol";
 import "./interfaces/IController.sol";
 import "./interfaces/IVersion.sol";
 import "./interfaces/IControllerIniter.sol";
 import "./interfaces/IActionYieldFarming.sol";
 import "./lib/Actions.sol";
 
-contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
+contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy, IDataChartManagerProxy {
     enum CONTRACTS {
         ADDRESS_VALIDATOR,
         DATA_SOURCE_MANAGER,
+        DATA_CHART_MANAGER,
         TAG_MANAGER,
         COMMENT_MANAGER,
         CBDD_TOKEN
@@ -23,8 +26,11 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
     // CBDD ERC20 contract
     IActionYieldFarming cbdd;
 
-    // Data Manager contract
+    // Data Source Manager contract
     IDataSourceManager dataSourceManager;
+
+    // Data Chart Manager contract
+    IDataChartManager dataChartManager;
 
     struct MyContract {
         address addr;
@@ -33,10 +39,12 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
     mapping(uint => MyContract) private my_contracts;
 
     mapping(uint => mapping (address => bool)) private likedDataSource;
+    mapping(uint => mapping (address => bool)) private likedDataCharts;
 
-    constructor(address cbddAddr, address dataSourceManagerAddr) public {
+    constructor(address cbddAddr, address dataSourceManagerAddr, address dataChartManagerAddr) public {
         _setContract(CONTRACTS.CBDD_TOKEN, cbddAddr);
         _setContract(CONTRACTS.DATA_SOURCE_MANAGER, dataSourceManagerAddr);
+        _setContract(CONTRACTS.DATA_CHART_MANAGER, dataChartManagerAddr);
     }
 
     modifier initedCBDD() {require(my_contracts[uint(CONTRACTS.CBDD_TOKEN)].addr != address(0x0)); _;}
@@ -68,7 +76,10 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
             emit RegisterCBDDToken(my_contracts[uint(code)].version, addr);
         } else if (code == CONTRACTS.DATA_SOURCE_MANAGER) {
             dataSourceManager = IDataSourceManager(addr);
-            emit RegisterDataManager(my_contracts[uint(code)].version, addr);
+            emit RegisterDataSourceManager(my_contracts[uint(code)].version, addr);
+        } else if (code == CONTRACTS.DATA_CHART_MANAGER) {
+            dataChartManager = IDataChartManager(addr);
+            emit RegisterDataChartManager(my_contracts[uint(code)].version, addr);
         }
     }
 
@@ -77,10 +88,16 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
         require(version == versionInstance.version(), "The version of the address is different from the one passed in");
     }
 
-    function registerDataManager(uint version, address contract_address) external {
+    function registerDataSourceManager(uint version, address contract_address) external {
         IVersion versionInstance = IVersion(contract_address);
         require(version == versionInstance.version(), "The version of the address is different from the one passed in");
         _setContract(CONTRACTS.DATA_SOURCE_MANAGER, contract_address);
+    }
+
+    function registerDataChartManager(uint version, address contract_address) external {
+        IVersion versionInstance = IVersion(contract_address);
+        require(version == versionInstance.version(), "The version of the address is different from the one passed in");
+        _setContract(CONTRACTS.DATA_CHART_MANAGER, contract_address);
     }
 
     function registerTagManager(uint version, address contract_address) external {
@@ -138,4 +155,41 @@ contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy {
         }
     }
     // Data Source Manager Proxy End
+
+    // Data Chart Manager Proxy Start
+    function createDataChart(string name, uint source_id, string desc, string chart_type, string data) external returns (uint) {
+        // TODO 地址不在黑名单
+        uint id = dataChartManager.createDataChart(msg.sender, name, source_id, desc, chart_type, data);
+        // yield
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.CREATE_DATA_CHART));
+        return id;
+    }
+
+    function updateDataChart(uint id, uint source_id, string name, string desc, string chart_type, string data) external {
+        dataChartManager.updateDataChart(msg.sender, id, source_id, name, desc, chart_type, data);
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.UPDATE_DATA_CHART));
+    }
+
+    function deleteDataChart(uint id) external {
+        dataChartManager.deleteDataChart(msg.sender, id);
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.DELETE_DATA_CHART));
+    }
+
+    function likeDataChart(uint chart_id, bool liked) external {
+        dataChartManager.likeDataChart(msg.sender, chart_id, liked);
+        // 已被奖励过点赞某数据源的地址，取消点赞后以及不喜欢、再次点赞等等，双方都不再进行奖励
+        if (!likedDataCharts[chart_id][msg.sender]) {
+            // 给双方进行奖励
+            likedDataCharts[chart_id][msg.sender] = true;
+            address owner = dataChartManager.getDataChartOwner(chart_id);
+            // 判断是 LIKE 还是 DISLIKE
+            if (liked) {
+                cbdd.actionYield(msg.sender, owner, uint(Actions.Action.LIKE_DATA_CHART));
+            } else {
+                cbdd.actionYield(msg.sender, owner, uint(Actions.Action.DISLIKE_DATA_CHART));
+            }
+        }
+    }
+
+    // Data Chart Manager Proxy End
 }
