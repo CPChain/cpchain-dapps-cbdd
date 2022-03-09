@@ -20,5 +20,5 @@ interface ICommentManager {
 
     function replyComment(address sender, uint targetID, string comment) external;
 
-    function likeComment(address sender, uint, bool liked) external;
+    function likeComment(address sender, uint id, bool liked) external;
 }

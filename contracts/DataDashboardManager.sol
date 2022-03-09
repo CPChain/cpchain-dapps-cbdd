@@ -16,7 +16,7 @@ contract DataDashboardManager is DataBaseManager, IDataDashboardManager {
 
     IDataBaseManager dataChartsInstance;
 
-    constructor(address dataChartContract) public {
+    constructor(address dataChartContract, address commentAddress) public DataBaseManager(commentAddress) {
         require(dataChartContract != address(0x0), "DataChart can not be null");
         dataChartsInstance = IDataBaseManager(dataChartContract);
     }

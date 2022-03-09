@@ -5,6 +5,7 @@ import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 import "../interfaces/IDataBaseManager.sol";
 import "../interfaces/IVersion.sol";
 import "./ControllerIniter.sol";
+import "../interfaces/ICommentManager.sol";
 
 
 contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager {
@@ -24,6 +25,10 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
     // address count
     mapping(address => uint) internal addrElementsCnt;
 
+    // Comment and tags
+    ICommentManager commentManager;
+    
+
     struct Element {
         uint id;
         address owner;
@@ -37,7 +42,8 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
     mapping(string => bool) private _name_set;
     mapping(uint => Element) private _elements;
 
-    constructor() public {
+    constructor(address commentAddress) public {
+        require(commentAddress != address(0x0), "Comment manager can not be null");
         context.version = 0;
         context.allowedDislike = true;
         context.maxLenOfDescription = 200;
@@ -46,6 +52,18 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
         context.minLenOfName = 1;
         context.addressDataElementsUpper = 500;
         context.seq = 0;
+
+        initBaseComment(commentAddress);
+    }
+
+    function initBaseComment(address baseComment) private {
+        IControllerIniter initer = IControllerIniter(baseComment);
+        // the contract should not has any controller inited it
+        require(!initer.isInitedController(), "This contract have been inited by other controller");
+        // init the contract
+        initer.initController(address(this));
+
+        commentManager = ICommentManager(baseComment);
     }
 
     modifier onlyNotExistsName(string name) {

@@ -15,7 +15,7 @@ import "./interfaces/IControllerIniter.sol";
 import "./interfaces/IActionYieldFarming.sol";
 import "./lib/Actions.sol";
 
-contract Controller is Claimable, Enable, IController, IDataSourceManagerProxy, IDataChartManagerProxy,
+contract Controller is Enable, IController, IDataSourceManagerProxy, IDataChartManagerProxy,
     IDataDashboardManagerProxy {
     enum CONTRACTS {
         ADDRESS_VALIDATOR,

@@ -3,9 +3,11 @@ pragma solidity ^0.4.24;
 import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecycle/Enable.sol";
 
 import "../interfaces/ICommentAdminManager.sol";
+import "../interfaces/ICommentManager.sol";
 import "../interfaces/IDataBaseManager.sol";
+import "./ControllerIniter.sol";
 
-contract BaseComment is Enable, ICommentAdminManager {
+contract BaseComment is Enable, ICommentAdminManager, ControllerIniter, ICommentManager {
     struct CommentContext {
         uint comments_seq;
         uint minLenOfComment;
@@ -29,14 +31,21 @@ contract BaseComment is Enable, ICommentAdminManager {
 
     IDataBaseManager dataBase;
 
-    constructor(address dataBaseContract) public {
-        require(dataBaseContract != address(0x0), "dataBaseContract can not be null");
+    constructor() public {
         // comment
         context.minLenOfComment = 1;
         context.maxLenOfComment = 200;
         context.comments_seq = 0;
         context.allowedDislike = true;
+    }
 
+    function initController(address c) public returns (bool) {
+        super.initController(c);
+        initBaseComment(c);
+    }
+
+    function initBaseComment(address dataBaseContract) internal {
+        require(dataBaseContract != address(0x0), "dataBaseContract can not be null");
         dataBase = IDataBaseManager(dataBaseContract);
     }
 
@@ -63,7 +72,32 @@ contract BaseComment is Enable, ICommentAdminManager {
         return context.comments_seq;
     }
 
-    function _addComment(address sender, uint dataElementID, string comment) internal onlyEnabled validateCommentLength(comment) returns (uint) {
+    // Comment
+
+    function addComment(address sender, uint id, string comment) external returns (uint) {
+        return _addComment(sender, id, comment);
+    }
+
+    function updateComment(address sender, uint id, string comment) external {
+        _updateComment(sender, id, comment);
+    }
+
+    function deleteComment(address sender, uint id) external {
+        _deleteComment(sender, id);
+    }
+
+    function replyComment(address sender, uint targetID, string comment) external {
+        _replyComment(sender, targetID, comment);
+    }
+
+    function likeComment(address sender, uint id, bool liked) external {
+        _likeComment(sender, id, liked);
+    }
+
+    // Comment End
+
+    function _addComment(address sender, uint dataElementID, string comment) internal
+        onlyEnabled validateCommentLength(comment) onlyController returns (uint) {
         require(dataBase.existsID(dataElementID), "The data element no exists");
         uint id = _nextCommentSeq();
         comments[id] = Comment({
@@ -74,18 +108,24 @@ contract BaseComment is Enable, ICommentAdminManager {
             comment: comment,
             deleted: false
         });
+        emit AddComment(id, dataElementID, sender, comment);
     }
 
-    function _updateComment(address sender, uint id, string comment) internal onlyEnabled onlyExists(id) onlyCommentOwner(sender, id)
+    function _updateComment(address sender, uint id, string comment) internal onlyEnabled onlyExists(id)
+        onlyCommentOwner(sender, id) onlyController
         validateCommentLength(comment) {
         comments[id].comment = comment;
+        emit UpdateComment(id, comment);
     }
 
-    function _deleteComment(address sender, uint id) internal onlyEnabled onlyExists(id) onlyCommentOwner(sender, id){
+    function _deleteComment(address sender, uint id) internal onlyEnabled onlyExists(id)
+        onlyCommentOwner(sender, id) onlyController {
         comments[id].deleted = true;
+        emit DeleteComment(id);
     }
 
-    function _replyComment(address sender, uint targetID, string comment) internal onlyExists(targetID) onlyEnabled validateCommentLength(comment) {
+    function _replyComment(address sender, uint targetID, string comment) internal onlyExists(targetID) onlyEnabled
+        validateCommentLength(comment) onlyController {
         uint id = _nextCommentSeq();
         comments[id] = Comment({
             id: id,
@@ -95,9 +135,10 @@ contract BaseComment is Enable, ICommentAdminManager {
             comment: comment,
             deleted: false
         });
+        emit ReplyComment(id, targetID, sender, comment);
     }
 
-    function _likeComment(address sender, uint id, bool liked) internal onlyExists(id) onlyEnabled {
+    function _likeComment(address sender, uint id, bool liked) internal onlyExists(id) onlyEnabled onlyController {
         if (!comments[id].liked[sender] && !comments[id].disliked[sender]) {
             if (liked) {
                 comments[id].liked[sender] = true;
@@ -112,6 +153,7 @@ contract BaseComment is Enable, ICommentAdminManager {
             require(liked, "You have disliked this comment");
             comments[id].disliked[sender] = false;
         }
+        emit LikeComment(id, sender, liked);
     }
 
     // called by owner
@@ -154,4 +196,6 @@ contract BaseComment is Enable, ICommentAdminManager {
     function isDislikedComment(uint id, address sender) external view returns (bool) {
         return comments[id].disliked[sender];
     }
+
+    // Comments and Tag
 }

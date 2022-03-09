@@ -17,7 +17,7 @@ contract DataChartManager is DataBaseManager, IDataChartManager {
 
     IDataBaseManager dataSourceInstance;
 
-    constructor(address dataSourceContract) public {
+    constructor(address dataSourceContract, address commentAddress) public DataBaseManager(commentAddress) {
         require(dataSourceContract != address(0x0), "DataSource can not be null");
         dataSourceInstance = IDataBaseManager(dataSourceContract);
     }

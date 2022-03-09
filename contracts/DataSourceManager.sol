@@ -15,6 +15,9 @@ contract DataSourceManager is DataBaseManager, IDataSourceManager {
     }
     mapping(uint => DataSourceExtend) private data_sources;
 
+    constructor(address commentAddress) public DataBaseManager(commentAddress) {
+    }
+
     function createDataSource(address sender, string name, string desc, string version, string url) external 
         onlyEnabled onlyController returns (uint) {
         return _createDataSource(sender, name, desc, version, url);

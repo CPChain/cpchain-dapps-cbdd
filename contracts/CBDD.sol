@@ -9,7 +9,7 @@ import "./lib/Actions.sol";
 import "./lib/ControllerIniter.sol";
 import "./interfaces/IVersion.sol";
 
-contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Claimable, Enable, ControllerIniter, IVersion {
+contract CBDD is MyERC20, IActionYieldFarming, IActionYieldFarmingAdmin, Enable, ControllerIniter, IVersion {
     uint _version = 0;
     
     struct ActionReward {

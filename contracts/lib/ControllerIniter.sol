@@ -19,7 +19,7 @@ contract ControllerIniter is IControllerIniter {
     /**
      * Init the controller
      */
-    function initController(address c) external returns (bool) {
+    function initController(address c) public returns (bool) {
         require(!inited, "Contract can only be inited once");
         controller = c;
         return true;
