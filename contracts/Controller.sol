@@ -13,6 +13,7 @@ import "./interfaces/IController.sol";
 import "./interfaces/IVersion.sol";
 import "./interfaces/IControllerIniter.sol";
 import "./interfaces/IActionYieldFarming.sol";
+import "./interfaces/ICommentManager.sol";
 import "./lib/Actions.sol";
 
 contract Controller is Enable, IController, IDataSourceManagerProxy, IDataChartManagerProxy,
@@ -32,6 +33,7 @@ contract Controller is Enable, IController, IDataSourceManagerProxy, IDataChartM
 
     // Data Source Manager contract
     IDataSourceManager dataSourceManager;
+    ICommentManager commentOnDataSource;
 
     // Data Chart Manager contract
     IDataChartManager dataChartManager;
@@ -86,6 +88,7 @@ contract Controller is Enable, IController, IDataSourceManagerProxy, IDataChartM
             emit RegisterCBDDToken(my_contracts[uint(code)].version, addr);
         } else if (code == CONTRACTS.DATA_SOURCE_MANAGER) {
             dataSourceManager = IDataSourceManager(addr);
+            commentOnDataSource = ICommentManager(addr);
             emit RegisterDataSourceManager(my_contracts[uint(code)].version, addr);
         } else if (code == CONTRACTS.DATA_CHART_MANAGER) {
             dataChartManager = IDataChartManager(addr);
@@ -247,5 +250,35 @@ contract Controller is Enable, IController, IDataSourceManagerProxy, IDataChartM
         }
     }
 
-    // Data Dashboard Manager Proxy End
+    // ---------- End ------------
+
+    // Comment on Data Source
+    function addCommentForDataSource(uint source_id, string comment) external returns (uint) {
+        commentOnDataSource.addComment(msg.sender, source_id, comment);
+        address sourceOwner = dataSourceManager.getDataSourceOwner(source_id);
+        cbdd.actionYield(msg.sender, sourceOwner, uint(Actions.Action.ADD_COMMENT_ON_DATA_SOURCE));
+    }
+
+    function updateCommentForDataSource(uint comment_id, string comment) external {
+        commentOnDataSource.updateComment(msg.sender, comment_id, comment);
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.UPDATE_COMMENT));
+    }
+
+    function deleteCommentForDataSource(uint comment_id) external {
+        commentOnDataSource.deleteComment(msg.sender, comment_id);
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.DELETE_COMMENT));
+    }
+
+    function replyCommentForDataSource(uint targetID, string comment) external returns (uint) {
+        commentOnDataSource.replyComment(msg.sender, targetID, comment);
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.REPLY_COMMENT));
+    }
+
+    function likeCommentForDataSource(uint id, bool liked) external {
+        commentOnDataSource.likeComment(msg.sender, id, liked);
+        
+        cbdd.actionYield(msg.sender, address(0x0), uint(Actions.Action.LIKE_COMMENT));
+    }
+
+    // ---------- End ------------
 }

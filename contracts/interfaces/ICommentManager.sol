@@ -18,7 +18,16 @@ interface ICommentManager {
 
     function deleteComment(address sender, uint id) external;
 
-    function replyComment(address sender, uint targetID, string comment) external;
+    function replyComment(address sender, uint targetID, string comment) external returns (uint);
 
     function likeComment(address sender, uint id, bool liked) external;
+
+    // views
+    function getComment(uint id) external view returns (uint commentID, address sender, string comment, uint replyTo);
+
+    function getCommentOwner(uint id) external view returns (address sender);
+
+    function isLikedComment(uint id, address sender) external view returns (bool);
+
+    function isDislikedComment(uint id, address sender) external view returns (bool);
 }

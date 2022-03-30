@@ -22,13 +22,4 @@ interface ICommentAdminManager {
 
     // get configs
     function getCommentContext() external view returns (uint minLen, uint maxLen, bool allowedDislike);
-
-    // views
-    function getComment(uint id) external view returns (uint commentID, address sender, string comment, uint replyTo);
-
-    function getCommentOwner(uint id) external view returns (address sender);
-
-    function isLikedComment(uint id, address sender) external view returns (bool);
-
-    function isDislikedComment(uint id, address sender) external view returns (bool);
 }

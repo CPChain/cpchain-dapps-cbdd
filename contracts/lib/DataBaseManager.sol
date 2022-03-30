@@ -8,7 +8,7 @@ import "./ControllerIniter.sol";
 import "../interfaces/ICommentManager.sol";
 
 
-contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager {
+contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager, ICommentManager {
     // context
     struct Context {
         uint version;
@@ -245,4 +245,45 @@ contract DataBaseManager is Enable, IVersion, ControllerIniter, IDataBaseManager
     function isDisabled(uint id) external view returns (bool) {
         return _elements[id].disabled;
     }
+
+    // Comment Manager
+
+    function addComment(address sender, uint id, string comment) external onlyEnabled onlyController returns (uint) {
+        return commentManager.addComment(sender, id, comment);
+    }
+
+    function updateComment(address sender, uint id, string comment) external onlyEnabled onlyController {
+        return commentManager.updateComment(sender, id, comment);
+    }
+
+    function deleteComment(address sender, uint id) external onlyEnabled onlyController {
+        return commentManager.deleteComment(sender, id);
+    }
+
+    function replyComment(address sender, uint targetID, string comment) external onlyEnabled onlyController returns (uint) {
+        return commentManager.replyComment(sender, targetID, comment);
+    }
+
+    function likeComment(address sender, uint id, bool liked) external onlyEnabled onlyController {
+        return commentManager.likeComment(sender, id, liked);
+    }
+
+    // views
+    function getComment(uint id) external view returns (uint commentID, address sender, string comment, uint replyTo) {
+        return commentManager.getComment(id);
+    }
+
+    function getCommentOwner(uint id) external view returns (address sender) {
+        return commentManager.getCommentOwner(id);
+    }
+
+    function isLikedComment(uint id, address sender) external view returns (bool) {
+        return commentManager.isLikedComment(id, sender);
+    }
+
+    function isDislikedComment(uint id, address sender) external view returns (bool) {
+        return commentManager.isDislikedComment(id, sender);
+    }
+
+    // ----------- End -----------
 }

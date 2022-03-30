@@ -86,8 +86,8 @@ contract BaseComment is Enable, ICommentAdminManager, ControllerIniter, IComment
         _deleteComment(sender, id);
     }
 
-    function replyComment(address sender, uint targetID, string comment) external {
-        _replyComment(sender, targetID, comment);
+    function replyComment(address sender, uint targetID, string comment) external returns (uint) {
+        return _replyComment(sender, targetID, comment);
     }
 
     function likeComment(address sender, uint id, bool liked) external {
@@ -125,7 +125,7 @@ contract BaseComment is Enable, ICommentAdminManager, ControllerIniter, IComment
     }
 
     function _replyComment(address sender, uint targetID, string comment) internal onlyExists(targetID) onlyEnabled
-        validateCommentLength(comment) onlyController {
+        validateCommentLength(comment) onlyController returns (uint) {
         uint id = _nextCommentSeq();
         comments[id] = Comment({
             id: id,
@@ -136,6 +136,7 @@ contract BaseComment is Enable, ICommentAdminManager, ControllerIniter, IComment
             deleted: false
         });
         emit ReplyComment(id, targetID, sender, comment);
+        return id;
     }
 
     function _likeComment(address sender, uint id, bool liked) internal onlyExists(id) onlyEnabled onlyController {
